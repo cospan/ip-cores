@@ -127,3 +127,26 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+# VIM temporary files
+*~
+*.swp
+*.swo
+
+*.log
+
+# Vivado HLS
+.cproject
+.project
+.settings
+.vivado*
+.apc
+solution*
+csim
+sim
+
+
+
+sim_build
+
+
