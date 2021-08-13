@@ -1,0 +1,120 @@
+[*]
+[*] GTKWave Analyzer v3.3.103 (w)1999-2019 BSI
+[*] Fri Aug 13 14:07:39 2021
+[*]
+[dumpfile] "/home/cospan/Projects/ip-cores/cores/demo_axi_streams/tests/design.vcd"
+[dumpfile_mtime] "Fri Aug 13 14:06:49 2021"
+[dumpfile_size] 28738
+[savefile] "/home/cospan/Projects/ip-cores/cores/demo_axi_streams/tests/waveforms.gtkw"
+[timestart] 565
+[size] 1920 1137
+[pos] -1 -1
+*-6.478040 1053 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+[treeopen] tb_axi_lite_slave.
+[treeopen] tb_axi_lite_slave.dut.
+[sst_width] 407
+[signals_width] 190
+[sst_expanded] 1
+[sst_vpaned_height] 371
+@8
+tb_axi_lite_slave.clk
+tb_axi_lite_slave.rst
+@200
+-
+@2
+tb_axi_lite_slave.test_id[7:0]
+@200
+-
+-
+@800200
+-DUT
+-HOST_2_CORE
+@8
+tb_axi_lite_slave.dut.w_reg_in_rdy
+tb_axi_lite_slave.dut.r_reg_in_ack_stb
+@2
+tb_axi_lite_slave.dut.w_reg_address[31:0]
+tb_axi_lite_slave.dut.w_reg_in_data[31:0]
+@8
+tb_axi_lite_slave.dut.r_reg_invalid_addr
+@1000200
+-HOST_2_CORE
+@200
+-
+@800200
+-CORE_2_HOST
+@8
+tb_axi_lite_slave.dut.w_reg_out_req
+tb_axi_lite_slave.dut.r_reg_out_rdy_stb
+@2
+tb_axi_lite_slave.dut.w_reg_address[31:0]
+tb_axi_lite_slave.dut.r_reg_out_data[31:0]
+@8
+tb_axi_lite_slave.dut.r_reg_invalid_addr
+@1000200
+-CORE_2_HOST
+@200
+-
+@2
+tb_axi_lite_slave.dut.r_control[31:0]
+@1000200
+-DUT
+@200
+-
+@800200
+-AXIS_IN
+@28
+tb_axi_lite_slave.dut.i_axis_clk
+tb_axi_lite_slave.dut.i_axis_rst
+tb_axi_lite_slave.dut.a2fa.i_axis_tuser
+tb_axi_lite_slave.dut.a2fa.i_axis_tvalid
+tb_axi_lite_slave.dut.a2fa.o_axis_tready
+@22
+tb_axi_lite_slave.dut.a2fa.i_axis_tdata[31:0]
+@28
+tb_axi_lite_slave.dut.a2fa.o_fifo_w_stb
+@1000200
+-AXIS_IN
+@200
+-
+@c00200
+-FIFO
+@28
+tb_axi_lite_slave.dut.w_fifo_w_stb
+@22
+tb_axi_lite_slave.dut.w_fifo_w_data[33:0]
+@28
+tb_axi_lite_slave.dut.w_fifo_not_full
+tb_axi_lite_slave.dut.w_fifo_full
+@1401200
+-FIFO
+@200
+-
+@800200
+-AXIS OUT
+@28
+tb_axi_lite_slave.dut.f2aa.o_fifo_r_stb
+@22
+tb_axi_lite_slave.dut.f2aa.i_fifo_data[33:0]
+@28
+tb_axi_lite_slave.dut.f2aa.i_fifo_empty
+tb_axi_lite_slave.dut.f2aa.i_fifo_not_empty
+@200
+-
+@28
+tb_axi_lite_slave.dut.f2aa.o_axis_tvalid
+@200
+-
+@28
+tb_axi_lite_slave.dut.f2aa.i_axis_tready
+@22
+tb_axi_lite_slave.dut.f2aa.o_axis_tdata[31:0]
+@29
+tb_axi_lite_slave.dut.f2aa.o_axis_tlast
+@1000200
+-AXIS OUT
+@200
+-
+-
+[pattern_trace] 1
+[pattern_trace] 0
