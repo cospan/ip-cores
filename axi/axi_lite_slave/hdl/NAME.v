@@ -166,7 +166,6 @@ assign w_version[`REVISION_RANGE]     = `REVISION;
 assign w_version[`VERSION_PAD_RANGE]  = 0;
 
 
-
 //synchronous logic
 always @ (posedge i_axi_clk) begin
   //De-assert Strobes
@@ -194,12 +193,10 @@ always @ (posedge i_axi_clk) begin
         end
         default: begin
           $display ("Unknown address: 0x%h", w_reg_address);
+          //Tell the host they wrote to an invalid address
+          r_reg_invalid_addr              <= 1;
         end
       endcase
-      if (w_reg_address > MAX_ADDR) begin
-        //Tell the host they wrote to an invalid address
-        r_reg_invalid_addr                <= 1;
-      end
       //Tell the AXI Slave Control we're done with the data
       r_reg_in_ack_stb                    <= 1;
     end
@@ -216,12 +213,9 @@ always @ (posedge i_axi_clk) begin
         default: begin
           //Unknown address
           r_reg_out_data                  <= 32'h00;
+          r_reg_invalid_addr              <= 1;
         end
       endcase
-      if (w_reg_address > MAX_ADDR) begin
-        //Tell the host they are reading from an invalid address
-        r_reg_invalid_addr                <= 1;
-      end
       //Tell the AXI Slave to send back this packet
       r_reg_out_rdy_stb                   <= 1;
     end
