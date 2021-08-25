@@ -151,4 +151,5 @@ sim_build
 results.xml
 design.vcd
 
-
+*.jou
+*.str
