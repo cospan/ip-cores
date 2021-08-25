@@ -92,7 +92,6 @@ demo_axi_streams #(
 
   .i_wvalid         (aximl_wvalid   ),
   .o_wready         (aximl_wready   ),
-  .i_wstrb          (aximl_wstrb    ),
   .i_wdata          (aximl_wdata    ),
 
 

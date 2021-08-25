@@ -17,6 +17,8 @@ from cocotb.triggers import Timer
 REG_CONTROL             = 0  << 2
 REG_VERSION             = 1  << 2
 
+
+
 #Set/Clear a bit
 BIT_CTRL_TEST           = 0
 

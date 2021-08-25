@@ -30,25 +30,21 @@ SOFTWARE.
  */
 
 `timescale 1ps / 1ps
+`default_nettype none
 
 module axis_2_fifo_adapter #(
   parameter AXIS_DATA_WIDTH     = 32,
-  parameter AXIS_KEEP_WIDTH     = (AXIS_DATA_WIDTH / 8),
   parameter FIFO_DATA_WIDTH     = AXIS_DATA_WIDTH + 1 + 1 //Space for data, user, last
 )(
-  input                               clk,
-  input                               rst,
+  input  wire                             i_axis_tuser,
+  input  wire                             i_axis_tvalid,
+  output wire                             o_axis_tready,
+  input  wire                             i_axis_tlast,
+  input  wire     [AXIS_DATA_WIDTH - 1:0] i_axis_tdata,
 
-  input                               i_axis_tuser,
-  input                               i_axis_tvalid,
-  output                              o_axis_tready,
-  input                               i_axis_tlast,
-  input       [AXIS_DATA_WIDTH - 1:0] i_axis_tdata,
-
-  output reg  [FIFO_DATA_WIDTH - 1:0] o_fifo_data,
-  output                              o_fifo_w_stb,
-  input                               i_fifo_full,
-  input                               i_fifo_not_full
+  output wire     [FIFO_DATA_WIDTH - 1:0] o_fifo_data,
+  output wire                             o_fifo_w_stb,
+  input  wire                             i_fifo_not_full
 );
 //local parameters
 //registes/wires

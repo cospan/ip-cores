@@ -29,6 +29,7 @@ SOFTWARE.
  */
 
 `timescale 1ps / 1ps
+`default_nettype none
 
 `define MAJOR_VERSION             1
 `define MINOR_VERSION             0
@@ -40,9 +41,8 @@ SOFTWARE.
 `define VERSION_PAD_RANGE         15:0
 
 module demo_axi_streams #(
-  parameter ADDR_WIDTH          = 32,
+  parameter ADDR_WIDTH          = 16,
   parameter DATA_WIDTH          = 32,
-  parameter STROBE_WIDTH        = (DATA_WIDTH / 8),
 
 
   parameter AXIS_DATA_WIDTH     = 32,
@@ -56,53 +56,52 @@ module demo_axi_streams #(
   parameter INVERT_AXI_RESET    = 1,
   parameter INVERT_AXIS_RESET   = 1
 )(
-  input                               i_axi_clk,
-  input                               i_axi_rst,
+  input  wire                             i_axi_clk,
+  input  wire                             i_axi_rst,
 
   //Write Address Channel
-  input                               i_awvalid,
-  input   [ADDR_WIDTH - 1: 0]         i_awaddr,
-  output                              o_awready,
+  input  wire                             i_awvalid,
+  input  wire [ADDR_WIDTH - 1: 0]         i_awaddr,
+  output wire                             o_awready,
 
   //Write Data Channel
-  input                               i_wvalid,
-  output                              o_wready,
-  input   [STROBE_WIDTH - 1:0]        i_wstrb,
-  input   [DATA_WIDTH - 1: 0]         i_wdata,
+  input  wire                             i_wvalid,
+  output wire                             o_wready,
+  input  wire [DATA_WIDTH - 1: 0]         i_wdata,
 
   //Write Response Channel
-  output                              o_bvalid,
-  input                               i_bready,
-  output  [1:0]                       o_bresp,
+  output wire                             o_bvalid,
+  input  wire                             i_bready,
+  output wire [1:0]                       o_bresp,
 
   //Read Address Channel
-  input                               i_arvalid,
-  output                              o_arready,
-  input   [ADDR_WIDTH - 1: 0]         i_araddr,
+  input  wire                             i_arvalid,
+  output wire                             o_arready,
+  input  wire [ADDR_WIDTH - 1: 0]         i_araddr,
 
   //Read Data Channel
-  output                              o_rvalid,
-  input                               i_rready,
-  output  [1:0]                       o_rresp,
-  output  [DATA_WIDTH - 1: 0]         o_rdata,
+  output wire                             o_rvalid,
+  input  wire                             i_rready,
+  output wire [1:0]                       o_rresp,
+  output wire [DATA_WIDTH - 1: 0]         o_rdata,
 
 
   //Input AXI Stream
-  input                               i_axis_clk,
-  input                               i_axis_rst,
+  input  wire                             i_axis_clk,
+  input  wire                             i_axis_rst,
 
-  input                               i_axis_in_tuser,
-  input                               i_axis_in_tvalid,
-  output                              o_axis_in_tready,
-  input                               i_axis_in_tlast,
-  input   [AXIS_DATA_WIDTH - 1:0]     i_axis_in_tdata,
+  input  wire                             i_axis_in_tuser,
+  input  wire                             i_axis_in_tvalid,
+  output wire                             o_axis_in_tready,
+  input  wire                             i_axis_in_tlast,
+  input  wire   [AXIS_DATA_WIDTH - 1:0]   i_axis_in_tdata,
 
 
-  output                              o_axis_out_tuser,
-  output                              o_axis_out_tvalid,
-  input                               i_axis_out_tready,
-  output                              o_axis_out_tlast,
-  output     [AXIS_DATA_WIDTH - 1:0]  o_axis_out_tdata
+  output wire                             o_axis_out_tuser,
+  output wire                             o_axis_out_tvalid,
+  input  wire                             i_axis_out_tready,
+  output wire                             o_axis_out_tlast,
+  output wire    [AXIS_DATA_WIDTH - 1:0]  o_axis_out_tdata
 
 );
 //local parameters
@@ -116,33 +115,33 @@ localparam  MAX_ADDR = REG_VERSION;
 //registers/wires
 
 //User Interface
-wire                        w_axi_rst;
-wire                        w_axis_rst;
-wire  [ADDR_WIDTH - 1: 0]   w_reg_address;
-reg                         r_reg_invalid_addr;
-
-wire                        w_reg_in_rdy;
-reg                         r_reg_in_ack_stb;
-wire  [DATA_WIDTH - 1: 0]   w_reg_in_data;
-
-wire                        w_reg_out_req;
-reg                         r_reg_out_rdy_stb;
-reg   [DATA_WIDTH - 1: 0]   r_reg_out_data;
+wire                            w_axi_rst;
+wire                            w_axis_rst;
+wire  [ADDR_WIDTH - 1: 0]       w_reg_address;
+reg                             r_reg_invalid_addr;
+                                
+wire                            w_reg_in_rdy;
+reg                             r_reg_in_ack_stb;
+wire  [DATA_WIDTH - 1: 0]       w_reg_in_data;
+                                
+wire                            w_reg_out_req;
+reg                             r_reg_out_rdy_stb;
+reg   [DATA_WIDTH - 1: 0]       r_reg_out_data;
 
 
 //TEMP DATA, JUST FOR THE DEMO
-reg   [DATA_WIDTH - 1: 0]     r_control;
-wire  [DATA_WIDTH - 1: 0]     w_version;
-
-wire  [FIFO_DATA_WIDTH - 1:0] w_fifo_w_data;
-wire                          w_fifo_w_stb;
-wire                          w_fifo_full;
-wire                          w_fifo_not_full;
-
-wire  [FIFO_DATA_WIDTH - 1:0] w_fifo_r_data;
-wire                          w_fifo_r_stb;
-wire                          w_fifo_empty;
-wire                          w_fifo_not_empty;
+reg   [DATA_WIDTH - 1: 0]       r_control;
+wire  [DATA_WIDTH - 1: 0]       w_version;
+                                
+wire  [FIFO_DATA_WIDTH - 1:0]   w_fifo_w_data;
+wire                            w_fifo_w_stb;
+wire                            w_fifo_full;
+wire                            w_fifo_not_full;
+                                
+wire  [FIFO_DATA_WIDTH - 1:0]   w_fifo_r_data;
+wire                            w_fifo_r_stb;
+wire                            w_fifo_empty;
+wire                            w_fifo_not_empty;
 
 //submodules
 
@@ -162,7 +161,6 @@ axi_lite_slave #(
 
   .i_wvalid           (i_wvalid             ),
   .o_wready           (o_wready             ),
-  .i_wstrb            (i_wstrb              ),
   .i_wdata            (i_wdata              ),
 
   .o_bvalid           (o_bvalid             ),
@@ -199,9 +197,6 @@ axi_lite_slave #(
 axis_2_fifo_adapter #(
   .AXIS_DATA_WIDTH    (AXIS_DATA_WIDTH      )
 )a2fa(
-  .clk                (i_axis_clk           ),
-  .rst                (w_axis_rst           ),
-
   .i_axis_tuser       (i_axis_in_tuser      ),
   .i_axis_tvalid      (i_axis_in_tvalid     ),
   .o_axis_tready      (o_axis_in_tready     ),
@@ -210,7 +205,6 @@ axis_2_fifo_adapter #(
 
   .o_fifo_data        (w_fifo_w_data        ),
   .o_fifo_w_stb       (w_fifo_w_stb         ),
-  .i_fifo_full        (w_fifo_full          ),
   .i_fifo_not_full    (w_fifo_not_full      )
 );
 
@@ -236,12 +230,8 @@ fifo #(
 fifo_2_axis_adapter #(
   .AXIS_DATA_WIDTH    (AXIS_DATA_WIDTH      )
 )f2aa(
-  .clk                (i_axis_clk           ),
-  .rst                (w_axis_rst           ),
-
   .o_fifo_r_stb       (w_fifo_r_stb         ),
   .i_fifo_data        (w_fifo_r_data        ),
-  .i_fifo_empty       (w_fifo_empty         ),
   .i_fifo_not_empty   (w_fifo_not_empty     ),
 
   .o_axis_tuser       (o_axis_out_tuser     ),
@@ -289,12 +279,10 @@ always @ (posedge i_axi_clk) begin
         end
         default: begin
           $display ("Unknown address: 0x%h", w_reg_address);
+          //Tell the host they wrote to an invalid address
+          r_reg_invalid_addr              <= 1;
         end
       endcase
-      if (w_reg_address > MAX_ADDR) begin
-        //Tell the host they wrote to an invalid address
-        r_reg_invalid_addr                <= 1;
-      end
       //Tell the AXI Slave Control we're done with the data
       r_reg_in_ack_stb                    <= 1;
     end
@@ -311,12 +299,9 @@ always @ (posedge i_axi_clk) begin
         default: begin
           //Unknown address
           r_reg_out_data                  <= 32'h00;
+          r_reg_invalid_addr              <= 1;
         end
       endcase
-      if (w_reg_address > MAX_ADDR) begin
-        //Tell the host they are reading from an invalid address
-        r_reg_invalid_addr                <= 1;
-      end
       //Tell the AXI Slave to send back this packet
       r_reg_out_rdy_stb                   <= 1;
     end

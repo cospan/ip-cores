@@ -34,22 +34,21 @@
 
 
 module fifo #(
-  parameter REGISTERED_OUTPUT = 0,
   parameter WIDTH = 4,
   parameter DEPTH = 4
 )(
-  input                   clk,
-  input                   rst,
+  input  wire                 clk,
+  input  wire                 rst,
 
-  input                   i_fifo_w_stb,
-  input       [WIDTH-1:0] i_fifo_w_data,
-  output                  o_fifo_full,
-  output                  o_fifo_not_full,
+  input  wire                 i_fifo_w_stb,
+  input  wire     [WIDTH-1:0] i_fifo_w_data,
+  output wire                 o_fifo_full,
+  output wire                 o_fifo_not_full,
 
-  input                   i_fifo_r_stb,
-  output     [WIDTH-1:0]  o_fifo_r_data,
-  output                  o_fifo_empty,
-  output                  o_fifo_not_empty
+  input  wire                 i_fifo_r_stb,
+  output wire    [WIDTH-1:0]  o_fifo_r_data,
+  output wire                 o_fifo_empty,
+  output wire                 o_fifo_not_empty
 );
 
 //local parameters
@@ -61,7 +60,6 @@ reg [WIDTH-1:0]         memory [0:DEPTH-1];
 reg [$clog2(DEPTH)-1:0] write_ptr;
 reg [$clog2(DEPTH)-1:0] read_ptr;
 reg [$clog2(DEPTH)-1:0] r_read_ptr;
-reg [WIDTH - 1:0]       r_fifo_r_data;
 
 //submodules
 //asynchronous logic
@@ -91,23 +89,14 @@ initial begin
 end // end initial
 
 //synchronous logic
-generate
-  if (REGISTERED_OUTPUT)
-    assign o_fifo_r_data = r_fifo_r_data;
-  else
-    assign o_fifo_r_data = memory[read_ptr];
-endgenerate
+assign o_fifo_r_data = memory[read_ptr];
 
 always @ (posedge clk) begin
   if (rst) begin
-    r_fifo_r_data     <= memory[0];
   end
   else begin
     if ( i_fifo_w_stb && o_fifo_not_full) begin
       memory[write_ptr] <= i_fifo_w_data;
-    end
-    if ( i_fifo_r_stb && o_fifo_not_empty) begin
-      r_fifo_r_data     <= memory[read_ptr];
     end
   end
 end

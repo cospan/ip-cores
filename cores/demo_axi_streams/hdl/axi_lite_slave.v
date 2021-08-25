@@ -31,55 +31,57 @@ SOFTWARE.
  */
 
 `timescale 1ps / 1ps
+`default_nettype none
 
 `include "axi_defines.v"
 
 module axi_lite_slave #(
-  parameter ADDR_WIDTH          = 32,
+  parameter ADDR_WIDTH          = 16,
   parameter DATA_WIDTH          = 32,
   parameter STROBE_WIDTH        = (DATA_WIDTH / 8)
 )(
 
-  input                               clk,
-  input                               rst,
+  input   wire                        clk,
+  input   wire                        rst,
 
   //Write Address Channel
-  input                               i_awvalid,
-  input       [ADDR_WIDTH - 1: 0]     i_awaddr,
+  input   wire                        i_awvalid,
+  input   wire    [ADDR_WIDTH - 1: 0] i_awaddr,
   output  reg                         o_awready,
 
   //Write Data Channel
-  input                               i_wvalid,
+  input   wire                        i_wvalid,
   output  reg                         o_wready,
-  input       [STROBE_WIDTH - 1:0]    i_wstrb,
-  input       [DATA_WIDTH - 1: 0]     i_wdata,
+  input   wire    [DATA_WIDTH - 1: 0] i_wdata,
 
   //Write Response Channel
   output  reg                         o_bvalid,
-  input                               i_bready,
+  input   wire                        i_bready,
   output  reg [1:0]                   o_bresp,
 
   //Read Address Channel
-  input                               i_arvalid,
+  input   wire                        i_arvalid,
   output  reg                         o_arready,
-  input       [ADDR_WIDTH - 1: 0]     i_araddr,
+  input   wire    [ADDR_WIDTH - 1: 0] i_araddr,
 
   //Read Data Channel
   output  reg                         o_rvalid,
-  input                               i_rready,
+  input   wire                        i_rready,
   output  reg [1:0]                   o_rresp,
   output  reg [DATA_WIDTH - 1: 0]     o_rdata,
 
+
+
   //Simple User Interface
   output  reg                         o_reg_in_rdy,
-  input                               i_reg_in_ack_stb,
+  input   wire                        i_reg_in_ack_stb,
   output  reg [ADDR_WIDTH - 1: 0]     o_reg_address,
   output  reg [DATA_WIDTH - 1: 0]     o_reg_in_data,
 
   output  reg                         o_reg_out_req,
-  input                               i_reg_out_rdy_stb,
-  input       [DATA_WIDTH - 1: 0]     i_reg_out_data,
-  input                               i_reg_invalid_addr
+  input   wire                        i_reg_out_rdy_stb,
+  input   wire    [DATA_WIDTH - 1: 0] i_reg_out_data,
+  input   wire                        i_reg_invalid_addr
 
 );
 
@@ -128,11 +130,11 @@ always @ (posedge clk) begin
         o_awready       <=  1;
         o_arready       <=  1;
         o_rvalid        <=  0;
+        o_wready        <=  0;
         o_bresp         <=  0;
         o_rresp         <=  0;
         o_bvalid        <=  0;
         o_reg_out_req   <=  0;
-        o_wready        <=  0;
 
         //Only handle read or write at one time, not both
         if (i_awvalid && o_awready) begin

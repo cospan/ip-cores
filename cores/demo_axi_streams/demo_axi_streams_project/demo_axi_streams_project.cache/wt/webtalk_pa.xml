@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<document>
+<!--The data in this file is primarily intended for consumption by Xilinx tools.
+The structure and the elements are likely to change over the next few releases.
+This means code written to parse this file will need to be revisited each subsequent release.-->
+<application name="pa" timeStamp="Thu Aug 19 07:10:22 2021">
+<section name="Project Information" visible="false">
+<property name="ProjectID" value="8bd77344f2984367a109a26692ce0ba2" type="ProjectID"/>
+<property name="ProjectIteration" value="1" type="ProjectIteration"/>
+</section>
+<section name="PlanAhead Usage" visible="true">
+<item name="Project Data">
+<property name="SrcSetCount" value="1" type="SrcSetCount"/>
+<property name="ConstraintSetCount" value="1" type="ConstraintSetCount"/>
+<property name="DesignMode" value="RTL" type="DesignMode"/>
+<property name="SynthesisStrategy" value="Vivado Synthesis Defaults" type="SynthesisStrategy"/>
+<property name="ImplStrategy" value="Vivado Implementation Defaults" type="ImplStrategy"/>
+</item>
+<item name="Java Command Handlers">
+<property name="AddBusInterfaceHandler" value="1" type="JavaHandler"/>
+<property name="IPPackagerHandler" value="4" type="JavaHandler"/>
+<property name="IPPackagerWizardHandler" value="1" type="JavaHandler"/>
+<property name="PackagerAddressMemoryWizard" value="1" type="JavaHandler"/>
+</item>
+<item name="Gui Handlers">
+<property name="AddressMemoryContentPanel_RUN_ADDRESSING_AND_MEMORY_MAP_WIZARD" value="1" type="GuiHandlerData"/>
+<property name="AddressingMemoryWizard_INTERFACE_LIGHT_FACET_TABLE" value="1" type="GuiHandlerData"/>
+<property name="BaseDialog_CANCEL" value="5" type="GuiHandlerData"/>
+<property name="BaseDialog_OK" value="12" type="GuiHandlerData"/>
+<property name="EditInterfaceDialog_TABBED_PANE" value="11" type="GuiHandlerData"/>
+<property name="EditParameterDialog_DISPLAY_NAME" value="1" type="GuiHandlerData"/>
+<property name="FileSetPanel_FILE_SET_PANEL_TREE" value="12" type="GuiHandlerData"/>
+<property name="GUICustomizationTreePanel_ADD_GROUP" value="3" type="GuiHandlerData"/>
+<property name="GUICustomizationTreePanel_EDIT_PAGE" value="1" type="GuiHandlerData"/>
+<property name="GUICustomizationTreePanel_EDIT_PARAMETER" value="1" type="GuiHandlerData"/>
+<property name="GUICustomizationTreePanel_TREE" value="38" type="GuiHandlerData"/>
+<property name="GuiControlsBaseDialog_DISPLAY_NAME" value="4" type="GuiHandlerData"/>
+<property name="GuiControlsBaseDialog_TOOL_TIP" value="1" type="GuiHandlerData"/>
+<property name="HToolBar_COLLAPSE_ALL" value="1" type="GuiHandlerData"/>
+<property name="IdentificationContentPanel_VENDOR_DISPLAY_NAME" value="1" type="GuiHandlerData"/>
+<property name="InterfaceConfigurationPanel_DISPLAY_NAME" value="1" type="GuiHandlerData"/>
+<property name="InterfaceConfigurationPanel_MODE" value="1" type="GuiHandlerData"/>
+<property name="InterfaceConfigurationPanel_NAME" value="1" type="GuiHandlerData"/>
+<property name="InterfaceDefinitionChooser_INTERFACE_DEFINITION_CHOOSER" value="1" type="GuiHandlerData"/>
+<property name="InterfaceDefinitionTreeTable_INTERFACES_TREE_TABLE" value="1" type="GuiHandlerData"/>
+<property name="InterfacePortMappingPanel_FILTER_INCOMPATIBLE_PHYSICAL_PORTS" value="6" type="GuiHandlerData"/>
+<property name="InterfacePortMappingPanel_HIDE_MAPPED_PORTS" value="6" type="GuiHandlerData"/>
+<property name="InterfacePortMappingPanel_INTERFACES_LOGICAL_PORTS" value="32" type="GuiHandlerData"/>
+<property name="InterfacePortMappingPanel_IPS_PHYSICAL_PORTS" value="29" type="GuiHandlerData"/>
+<property name="InterfacePortMappingPanel_MAP_PORTS" value="24" type="GuiHandlerData"/>
+<property name="InterfacePortMappingPanel_TABLE" value="32" type="GuiHandlerData"/>
+<property name="MainMenuMgr_TOOLS" value="6" type="GuiHandlerData"/>
+<property name="MemoryMapFacetTable_ADD_ADDRESS_BLOCK" value="1" type="GuiHandlerData"/>
+<property name="MemoryMapFacetTable_MEMORY_MAP" value="3" type="GuiHandlerData"/>
+<property name="MessageBanner_CHANGES_DETECTED_IN_VIVADO_PROJECT_THAT" value="6" type="GuiHandlerData"/>
+<property name="MsgView_CLEAR_MESSAGES_RESULTING_FROM_USER_EXECUTED" value="1" type="GuiHandlerData"/>
+<property name="PACommandNames_IP_PACKAGER_WIZARD" value="1" type="GuiHandlerData"/>
+<property name="PACommandNames_PACKAGER_ADD_BUS_INTERFACE" value="1" type="GuiHandlerData"/>
+<property name="PackagerStepContentPanel_MESSAGES" value="3" type="GuiHandlerData"/>
+<property name="PackagerStepsPanel_PACKAGER_STEPS_LIST" value="20" type="GuiHandlerData"/>
+<property name="PortAndInterfaceFacetTable_ASSOCIATE_CLOCKS" value="3" type="GuiHandlerData"/>
+<property name="PortAndInterfaceFacetTable_EDIT_PORT" value="1" type="GuiHandlerData"/>
+<property name="PortAndInterfaceFacetTable_PORT_AND_INTERFACE_FACET_TABLE" value="38" type="GuiHandlerData"/>
+<property name="ReviewContentPanel_PACKAGE_IP" value="1" type="GuiHandlerData"/>
+<property name="ReviewContentPanel_RE_PACKAGE_IP" value="7" type="GuiHandlerData"/>
+<property name="SyntheticaGettingStartedView_RECENT_PROJECTS" value="4" type="GuiHandlerData"/>
+<property name="TclConsoleView_CLEAR_ALL_OUTPUT_IN_TCL_CONSOLE" value="8" type="GuiHandlerData"/>
+<property name="TclConsoleView_COPY" value="7" type="GuiHandlerData"/>
+<property name="TclConsoleView_TCL_CONSOLE_CODE_EDITOR" value="14" type="GuiHandlerData"/>
+</item>
+<item name="Other">
+<property name="GuiMode" value="75" type="GuiMode"/>
+<property name="BatchMode" value="0" type="BatchMode"/>
+<property name="TclMode" value="51" type="TclMode"/>
+</item>
+</section>
+</application>
+</document>

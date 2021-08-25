@@ -34,22 +34,17 @@ SOFTWARE.
 
 module fifo_2_axis_adapter #(
   parameter AXIS_DATA_WIDTH     = 32,
-  parameter AXIS_KEEP_WIDTH     = (AXIS_DATA_WIDTH / 8),
   parameter FIFO_DATA_WIDTH     = AXIS_DATA_WIDTH + 1 + 1 //Space for data, user, last
 )(
-  input                                 clk,
-  input                                 rst,
+  input  wire     [FIFO_DATA_WIDTH - 1: 0]  i_fifo_data,
+  output wire                               o_fifo_r_stb,
+  input  wire                               i_fifo_not_empty,
 
-  input       [FIFO_DATA_WIDTH - 1: 0]  i_fifo_data,
-  output                                o_fifo_r_stb,
-  input                                 i_fifo_empty,
-  input                                 i_fifo_not_empty,
-
-  output                                o_axis_tuser,
-  output      [AXIS_DATA_WIDTH - 1: 0]  o_axis_tdata,
-  output                                o_axis_tvalid,
-  input                                 i_axis_tready,
-  output                                o_axis_tlast
+  output wire                               o_axis_tuser,
+  output wire     [AXIS_DATA_WIDTH - 1: 0]  o_axis_tdata,
+  output wire                               o_axis_tvalid,
+  input  wire                               i_axis_tready,
+  output wire                               o_axis_tlast
 );
 //local parameters
 //Registers/Wires
