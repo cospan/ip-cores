@@ -71,11 +71,11 @@ wire  [ADDR_WIDTH - 1: 0]   w_reg_address;
 reg                         r_reg_invalid_addr;
 
 wire                        w_reg_in_rdy;
-reg                         r_reg_in_ack_stb;
+reg                         r_reg_in_ack;
 wire  [DATA_WIDTH - 1: 0]   w_reg_in_data;
 
 wire                        w_reg_out_req;
-reg                         r_reg_out_rdy_stb;
+reg                         r_reg_out_rdy;
 reg   [DATA_WIDTH - 1: 0]   r_reg_out_data;
 
 
@@ -125,12 +125,12 @@ axi_lite_slave #(
 
   //Ingress Path (From Master)
   .o_reg_in_rdy       (w_reg_in_rdy         ),
-  .i_reg_in_ack_stb   (r_reg_in_ack_stb     ),
+  .i_reg_in_ack       (r_reg_in_ack         ),
   .o_reg_in_data      (w_reg_in_data        ),
 
   //Egress Path (To Master)
   .o_reg_out_req      (w_reg_out_req        ),
-  .i_reg_out_rdy_stb  (r_reg_out_rdy_stb    ),
+  .i_reg_out_rdy      (r_reg_out_rdy        ),
   .i_reg_out_data     (r_reg_out_data       )
 );
 
@@ -145,9 +145,9 @@ assign w_version[`VERSION_PAD_RANGE]  = 0;
 
 //synchronous logic
 always @ (posedge i_axi_clk) begin
-  //De-assert Strobes
-  r_reg_in_ack_stb                        <=  0;
-  r_reg_out_rdy_stb                       <=  0;
+  //De-assert
+  r_reg_in_ack                            <=  0;
+  r_reg_out_rdy                           <=  0;
   r_reg_invalid_addr                      <=  0;
 
   if (w_axi_rst) begin
@@ -175,7 +175,7 @@ always @ (posedge i_axi_clk) begin
         end
       endcase
       //Tell the AXI Slave Control we're done with the data
-      r_reg_in_ack_stb                    <= 1;
+      r_reg_in_ack                        <= 1;
     end
     else if (w_reg_out_req) begin
       //To master
@@ -194,7 +194,7 @@ always @ (posedge i_axi_clk) begin
         end
       endcase
       //Tell the AXI Slave to send back this packet
-      r_reg_out_rdy_stb                   <= 1;
+      r_reg_out_rdy                       <= 1;
     end
   end
 end

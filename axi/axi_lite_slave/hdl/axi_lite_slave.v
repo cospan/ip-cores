@@ -80,7 +80,7 @@ module axi_lite_slave #(
   output  reg [DATA_WIDTH - 1: 0]     o_reg_in_data,
 
   output  reg                         o_reg_out_req,
-  input                               i_reg_out_rdy_stb,
+  input                               i_reg_out_rdy,
   input       [DATA_WIDTH - 1: 0]     i_reg_out_data,
   input                               i_reg_invalid_addr
 
@@ -186,7 +186,7 @@ always @ (posedge clk) begin
       //Read Path
       READ_WAIT_FOR_USER: begin
         o_arready       <=  0;
-        if (i_reg_out_rdy_stb) begin
+        if (i_reg_out_rdy) begin
           //The data in i_reg_out_data should be valid now
           o_rdata       <=  i_reg_out_data;
           if (i_reg_invalid_addr) begin
