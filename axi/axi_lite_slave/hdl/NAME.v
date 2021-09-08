@@ -17,7 +17,7 @@
 `define VERSION_PAD_RANGE         15:0
 
 module NAME #(
-  parameter ADDR_WIDTH          = 32,
+  parameter ADDR_WIDTH          = 16,
   parameter DATA_WIDTH          = 32,
   parameter STROBE_WIDTH        = (DATA_WIDTH / 8),
   parameter INVERT_AXI_RESET    = 1
