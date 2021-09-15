@@ -61,7 +61,7 @@ SOFTWARE.
 
 
 module rgb_led_control #(
-  parameter                 COLOR_DEPTH   = 4,          //Number of
+  parameter                 COLOR_DEPTH   = 4,          //Number of States
   parameter                 SHIFT_DEPTH   = 16          //Max Depth
 )(
   input   wire                              clk,
@@ -196,8 +196,8 @@ assign  o_blue              = r_color[2][8];
 assign  w_pwm_cycle         = ((r_pwm_index == 255) && r_pwm_clk_edge);
 assign  w_trans_count       = (2 ** w_trans_shift);
 assign  w_trans_shift       = (i_trans_shift > `CLOG2(SHIFT_DEPTH)) ?
-                                  (i_trans_shift[`CLOG2(SHIFT_DEPTH) - 1:0]) :
-                                  (`CLOG2(SHIFT_DEPTH) - 1);
+                                (i_trans_shift[`CLOG2(SHIFT_DEPTH) - 1:0]) :
+                                (`CLOG2(SHIFT_DEPTH) - 1);
 
 //synchronous logic
 
