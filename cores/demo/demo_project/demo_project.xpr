@@ -6,7 +6,7 @@
 <Project Version="7" Minor="44" Path="/home/cospan/Projects/ip-cores/cores/demo/demo_project/demo_project.xpr">
   <DefaultLaunch Dir="$PRUNDIR"/>
   <Configuration>
-    <Option Name="Id" Val="cbea66979aa64345adba5cf15b57fdba"/>
+    <Option Name="Id" Val="25b1bba0a572414b85f30f48a3a071e5"/>
     <Option Name="Part" Val="xc7z020clg400-1"/>
     <Option Name="CompiledLibDir" Val="$PCACHEDIR/compile_simlib"/>
     <Option Name="CompiledLibDirXSim" Val=""/>

@@ -50,9 +50,9 @@ def test_read_version(dut):
     Expected Results:
         Read from the version register
     """
-    dut.test_id <= 0
     setup_dut(dut)
     demo = demoDriver(dut, CLK_PERIOD, False)
+    dut.test_id <= 0
     yield reset_dut(dut)
 
     # Read the version
@@ -76,9 +76,9 @@ def test_write_control(dut):
     Expected Results:
         Read from the version register
     """
-    dut.test_id <= 1
     setup_dut(dut)
     demo = demoDriver(dut, CLK_PERIOD, False)
+    dut.test_id <= 1
     yield reset_dut(dut)
 
     my_control = 0x01234567
@@ -100,9 +100,9 @@ def test_read_control(dut):
     Expected Results:
         Read from the version register
     """
-    dut.test_id <= 2
     setup_dut(dut)
     demo = demoDriver(dut, CLK_PERIOD, False)
+    dut.test_id <= 2
     yield reset_dut(dut)
 
     my_control = 0xFEDCBA98
@@ -112,4 +112,52 @@ def test_read_control(dut):
     yield Timer(CLK_PERIOD * 20)
     dut._log.info("Done")
     assert control == my_control
+
+@cocotb.test(skip = False)
+def test_write_demo(dut):
+    """
+    Description:
+        Write the entire demo register
+
+    Test ID: 1
+
+    Expected Results:
+        Read from the version register
+    """
+    setup_dut(dut)
+    demo = demoDriver(dut, CLK_PERIOD, False)
+    dut.test_id <= 3
+    yield reset_dut(dut)
+
+    my_demo = 0xABBA600D    # ABBA is a G00D band
+    yield demo.set_demo(my_demo)
+    dut_demo = dut.dut.r_demo.value
+    dut._log.debug ("Control: 0x%08X" % dut.dut.r_demo.value)
+    yield Timer(CLK_PERIOD * 20)
+    dut._log.debug("Done")
+    assert dut_demo == my_demo
+
+@cocotb.test(skip = False)
+def test_read_demo(dut):
+    """
+    Description:
+        Read the entire demo register
+
+    Test ID: 2
+
+    Expected Results:
+        Read from the version register
+    """
+    setup_dut(dut)
+    demo = demoDriver(dut, CLK_PERIOD, False)
+    dut.test_id <= 4
+    yield reset_dut(dut)
+
+    my_demo = 0xFEEDACA7    # Always remember to FEED A CAT
+    dut.dut.r_demo.value = my_demo
+    demo = yield demo.get_demo()
+    dut._log.info ("Control: 0x%08X" % demo)
+    yield Timer(CLK_PERIOD * 20)
+    dut._log.info("Done")
+    assert demo == my_demo
 

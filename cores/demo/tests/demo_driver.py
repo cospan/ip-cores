@@ -15,7 +15,8 @@ from cocotb_bus.drivers.amba import AXI4LiteMaster
 from cocotb.triggers import Timer
 
 REG_CONTROL             = 0  << 2
-REG_VERSION             = 1  << 2
+REG_DEMO                = 1  << 2
+REG_VERSION             = 2  << 2
 
 
 #Set/Clear a bit
@@ -46,6 +47,17 @@ class demoDriver (Driver):
     @cocotb.coroutine
     def get_control(self):
         data = yield self.read_register(REG_CONTROL)
+        return data
+
+    # Set an entire Register
+    @cocotb.coroutine
+    def set_demo(self, data):
+        yield self.write_register(REG_DEMO, data)
+
+    # Get Entire Register
+    @cocotb.coroutine
+    def get_demo(self):
+        data = yield self.read_register(REG_DEMO)
         return data
 
     # Set a bit within a register

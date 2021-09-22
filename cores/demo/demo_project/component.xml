@@ -231,7 +231,7 @@
         <spirit:parameters>
           <spirit:parameter>
             <spirit:name>viewChecksum</spirit:name>
-            <spirit:value>8fdc4100</spirit:value>
+            <spirit:value>a85cc292</spirit:value>
           </spirit:parameter>
         </spirit:parameters>
       </spirit:view>
@@ -247,7 +247,7 @@
         <spirit:parameters>
           <spirit:parameter>
             <spirit:name>viewChecksum</spirit:name>
-            <spirit:value>8fdc4100</spirit:value>
+            <spirit:value>a85cc292</spirit:value>
           </spirit:parameter>
         </spirit:parameters>
       </spirit:view>
@@ -612,7 +612,7 @@
       <spirit:file>
         <spirit:name>../hdl/demo.v</spirit:name>
         <spirit:fileType>verilogSource</spirit:fileType>
-        <spirit:userFileType>CHECKSUM_a1846c48</spirit:userFileType>
+        <spirit:userFileType>CHECKSUM_f82c491c</spirit:userFileType>
       </spirit:file>
     </spirit:fileSet>
     <spirit:fileSet>
@@ -705,13 +705,13 @@
       <xilinx:displayName>demo_v1_0</xilinx:displayName>
       <xilinx:definitionSource>package_project</xilinx:definitionSource>
       <xilinx:coreRevision>2</xilinx:coreRevision>
-      <xilinx:coreCreationDateTime>2021-08-24T14:36:50Z</xilinx:coreCreationDateTime>
+      <xilinx:coreCreationDateTime>2021-09-22T14:26:40Z</xilinx:coreCreationDateTime>
     </xilinx:coreExtensions>
     <xilinx:packagingInfo>
       <xilinx:xilinxVersion>2019.2</xilinx:xilinxVersion>
       <xilinx:checksum xilinx:scope="busInterfaces" xilinx:value="61c6f395"/>
       <xilinx:checksum xilinx:scope="memoryMaps" xilinx:value="768827a9"/>
-      <xilinx:checksum xilinx:scope="fileGroups" xilinx:value="ca59d6fb"/>
+      <xilinx:checksum xilinx:scope="fileGroups" xilinx:value="d197b1f4"/>
       <xilinx:checksum xilinx:scope="ports" xilinx:value="9fcc711d"/>
       <xilinx:checksum xilinx:scope="hdlParameters" xilinx:value="181375ec"/>
       <xilinx:checksum xilinx:scope="parameters" xilinx:value="b6e89165"/>

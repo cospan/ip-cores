@@ -78,11 +78,9 @@ module demo #(
 //local parameters
 
 //Address Map
-//localparam  ADDR_0      = 0 << 2;
-//localparam  ADDR_1      = 1 << 2;
-
 localparam  REG_CONTROL      = 0 << 2;
-localparam  REG_VERSION      = 1 << 2;
+localparam  REG_DEMO         = 1 << 2;
+localparam  REG_VERSION      = 2 << 2;
 
 localparam  MAX_ADDR = REG_VERSION;
 
@@ -102,9 +100,10 @@ reg                         r_reg_out_rdy_stb;
 reg   [DATA_WIDTH - 1: 0]   r_reg_out_data;
 
 
-//TEMP DATA, JUST FOR THE DEMO
+//User Registers
 reg   [DATA_WIDTH - 1: 0]   r_control;
 wire  [DATA_WIDTH - 1: 0]   w_version;
+reg   [DATA_WIDTH - 1: 0]   r_demo;
 
 
 //submodules
@@ -179,6 +178,7 @@ always @ (posedge i_axi_clk) begin
 
     //Reset the temporary Data
     r_control                             <=  0;
+    r_demo                                <=  0;
   end
   else begin
 
@@ -186,11 +186,12 @@ always @ (posedge i_axi_clk) begin
       //From master
       case (w_reg_address)
         REG_CONTROL: begin
-          //$display("Incomming data on address: 0x%h: 0x%h", w_reg_address, w_reg_in_data);
           r_control                       <=  w_reg_in_data;
         end
+        REG_DEMO: begin
+          r_demo                          <=  w_reg_in_data;
+        end
         REG_VERSION: begin
-          //$display("Incomming data on address: 0x%h: 0x%h", w_reg_address, w_reg_in_data);
         end
         default: begin
           $display ("Unknown address: 0x%h", w_reg_address);
@@ -202,10 +203,12 @@ always @ (posedge i_axi_clk) begin
     end
     else if (w_reg_out_req) begin
       //To master
-      //$display("User is reading from address 0x%0h", w_reg_address);
       case (w_reg_address)
         REG_CONTROL: begin
           r_reg_out_data                  <= r_control;
+        end
+        REG_DEMO: begin
+          r_reg_out_data                  <= r_demo;
         end
         REG_VERSION: begin
           r_reg_out_data                  <= w_version;
