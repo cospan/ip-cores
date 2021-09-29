@@ -49,8 +49,6 @@
     </spirit:busInterface>
     <spirit:busInterface>
       <spirit:name>control</spirit:name>
-      <spirit:displayName>Control</spirit:displayName>
-      <spirit:description>AXI Lite Slave Interface</spirit:description>
       <spirit:busType spirit:vendor="xilinx.com" spirit:library="interface" spirit:name="aximm" spirit:version="1.0"/>
       <spirit:abstractionType spirit:vendor="xilinx.com" spirit:library="interface" spirit:name="aximm_rtl" spirit:version="1.0"/>
       <spirit:slave>
@@ -597,20 +595,16 @@
     <spirit:fileSet>
       <spirit:name>xilinx_anylanguagesynthesis_view_fileset</spirit:name>
       <spirit:file>
-        <spirit:name>/home/cospan/Projects/ip-cores/cores/demo/hdl/axi_defines.v</spirit:name>
+        <spirit:name>hdl/axi_defines.v</spirit:name>
         <spirit:fileType>verilogSource</spirit:fileType>
         <spirit:isIncludeFile>true</spirit:isIncludeFile>
       </spirit:file>
       <spirit:file>
-        <spirit:name>../hdl/axi_defines.v</spirit:name>
+        <spirit:name>hdl/axi_lite_slave.v</spirit:name>
         <spirit:fileType>verilogSource</spirit:fileType>
       </spirit:file>
       <spirit:file>
-        <spirit:name>../hdl/axi_lite_slave.v</spirit:name>
-        <spirit:fileType>verilogSource</spirit:fileType>
-      </spirit:file>
-      <spirit:file>
-        <spirit:name>../hdl/demo.v</spirit:name>
+        <spirit:name>hdl/demo.v</spirit:name>
         <spirit:fileType>verilogSource</spirit:fileType>
         <spirit:userFileType>CHECKSUM_f82c491c</spirit:userFileType>
       </spirit:file>
@@ -618,20 +612,16 @@
     <spirit:fileSet>
       <spirit:name>xilinx_anylanguagebehavioralsimulation_view_fileset</spirit:name>
       <spirit:file>
-        <spirit:name>/home/cospan/Projects/ip-cores/cores/demo/hdl/axi_defines.v</spirit:name>
+        <spirit:name>hdl/axi_defines.v</spirit:name>
         <spirit:fileType>verilogSource</spirit:fileType>
         <spirit:isIncludeFile>true</spirit:isIncludeFile>
       </spirit:file>
       <spirit:file>
-        <spirit:name>../hdl/axi_defines.v</spirit:name>
+        <spirit:name>hdl/axi_lite_slave.v</spirit:name>
         <spirit:fileType>verilogSource</spirit:fileType>
       </spirit:file>
       <spirit:file>
-        <spirit:name>../hdl/axi_lite_slave.v</spirit:name>
-        <spirit:fileType>verilogSource</spirit:fileType>
-      </spirit:file>
-      <spirit:file>
-        <spirit:name>../hdl/demo.v</spirit:name>
+        <spirit:name>hdl/demo.v</spirit:name>
         <spirit:fileType>verilogSource</spirit:fileType>
       </spirit:file>
     </spirit:fileSet>
@@ -704,12 +694,36 @@
       </xilinx:taxonomies>
       <xilinx:displayName>demo_v1_0</xilinx:displayName>
       <xilinx:definitionSource>package_project</xilinx:definitionSource>
-      <xilinx:coreRevision>2</xilinx:coreRevision>
-      <xilinx:coreCreationDateTime>2021-09-22T14:26:40Z</xilinx:coreCreationDateTime>
+      <xilinx:coreRevision>3</xilinx:coreRevision>
+      <xilinx:coreCreationDateTime>2021-09-24T18:13:24Z</xilinx:coreCreationDateTime>
+      <xilinx:tags>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@5348dce8_ARCHIVE_LOCATION">/home/cospan/Projects/ip-cores/cores/demo</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@70710029_ARCHIVE_LOCATION">/home/cospan/Projects/ip-cores/cores/demo</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@56b386b_ARCHIVE_LOCATION">/home/cospan/Projects/ip-cores/cores/demo</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@11feeb08_ARCHIVE_LOCATION">/home/cospan/Projects/ip-cores/cores/demo</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@124ce3a2_ARCHIVE_LOCATION">/home/cospan/Projects/ip-cores/cores/demo</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@13c20e2d_ARCHIVE_LOCATION">/home/cospan/Projects/ip-cores/cores/demo</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@37566fa5_ARCHIVE_LOCATION">/home/cospan/Projects/ip-cores/cores/demo</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@baf001b_ARCHIVE_LOCATION">/home/cospan/Projects/ip-cores/cores/demo</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@1a5effdb_ARCHIVE_LOCATION">/home/cospan/Projects/ip-cores/cores/demo</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@11238c1a_ARCHIVE_LOCATION">/home/cospan/Projects/ip-cores/cores/demo</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@2309fedd_ARCHIVE_LOCATION">/home/cospan/Projects/ip-cores/cores/demo</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@474f4db_ARCHIVE_LOCATION">/home/cospan/Projects/ip-cores/cores/demo</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@18a1fb81_ARCHIVE_LOCATION">/home/cospan/Projects/ip-cores/cores/demo</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@5936932e_ARCHIVE_LOCATION">/home/cospan/Projects/ip-cores/cores/demo</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@2ae665ed_ARCHIVE_LOCATION">/home/cospan/Projects/ip-cores/cores/demo</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@748bb25a_ARCHIVE_LOCATION">/home/cospan/Projects/ip-cores/cores/demo</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@25b02624_ARCHIVE_LOCATION">/home/cospan/Projects/ip-cores/cores/demo</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@65d7db04_ARCHIVE_LOCATION">/home/cospan/Projects/ip-cores/cores/demo</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@55f3e3e2_ARCHIVE_LOCATION">/home/cospan/Projects/ip-cores/cores/demo</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@5b222656_ARCHIVE_LOCATION">/home/cospan/Projects/ip-cores/cores/demo</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@505617c9_ARCHIVE_LOCATION">/home/cospan/Projects/ip-cores/cores/demo</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@79bc5966_ARCHIVE_LOCATION">/home/cospan/Projects/ip-cores/cores/demo</xilinx:tag>
+      </xilinx:tags>
     </xilinx:coreExtensions>
     <xilinx:packagingInfo>
       <xilinx:xilinxVersion>2019.2</xilinx:xilinxVersion>
-      <xilinx:checksum xilinx:scope="busInterfaces" xilinx:value="61c6f395"/>
+      <xilinx:checksum xilinx:scope="busInterfaces" xilinx:value="7b462d64"/>
       <xilinx:checksum xilinx:scope="memoryMaps" xilinx:value="768827a9"/>
       <xilinx:checksum xilinx:scope="fileGroups" xilinx:value="d197b1f4"/>
       <xilinx:checksum xilinx:scope="ports" xilinx:value="9fcc711d"/>
