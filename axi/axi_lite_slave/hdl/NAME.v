@@ -162,11 +162,11 @@ always @ (posedge i_axi_clk) begin
       //From master
       case (w_reg_address)
         REG_CONTROL: begin
-          //$display("Incomming data on address: 0x%h: 0x%h", w_reg_address, w_reg_in_data);
+          //$display("Incoming data on address: 0x%h: 0x%h", w_reg_address, w_reg_in_data);
           r_control                       <=  w_reg_in_data;
         end
         REG_VERSION: begin
-          //$display("Incomming data on address: 0x%h: 0x%h", w_reg_address, w_reg_in_data);
+          //$display("Incoming data on address: 0x%h: 0x%h", w_reg_address, w_reg_in_data);
         end
         default: begin
           $display ("Unknown address: 0x%h", w_reg_address);
