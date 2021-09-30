@@ -86,10 +86,11 @@ module demo_axi_streams #(
   output wire [DATA_WIDTH - 1: 0]         o_rdata,
 
 
-  //Input AXI Stream
+  //AXI Stream
   input  wire                             i_axis_clk,
   input  wire                             i_axis_rst,
 
+  //Input AXI Stream
   input  wire                             i_axis_in_tuser,
   input  wire                             i_axis_in_tvalid,
   output wire                             o_axis_in_tready,
@@ -97,6 +98,7 @@ module demo_axi_streams #(
   input  wire   [AXIS_DATA_WIDTH - 1:0]   i_axis_in_tdata,
 
 
+  //Output AXI Stream
   output wire                             o_axis_out_tuser,
   output wire                             o_axis_out_tvalid,
   input  wire                             i_axis_out_tready,
@@ -119,11 +121,11 @@ wire                            w_axi_rst;
 wire                            w_axis_rst;
 wire  [ADDR_WIDTH - 1: 0]       w_reg_address;
 reg                             r_reg_invalid_addr;
-                                
+
 wire                            w_reg_in_rdy;
 reg                             r_reg_in_ack_stb;
 wire  [DATA_WIDTH - 1: 0]       w_reg_in_data;
-                                
+
 wire                            w_reg_out_req;
 reg                             r_reg_out_rdy_stb;
 reg   [DATA_WIDTH - 1: 0]       r_reg_out_data;
@@ -132,12 +134,12 @@ reg   [DATA_WIDTH - 1: 0]       r_reg_out_data;
 //TEMP DATA, JUST FOR THE DEMO
 reg   [DATA_WIDTH - 1: 0]       r_control;
 wire  [DATA_WIDTH - 1: 0]       w_version;
-                                
+
 wire  [FIFO_DATA_WIDTH - 1:0]   w_fifo_w_data;
 wire                            w_fifo_w_stb;
 wire                            w_fifo_full;
 wire                            w_fifo_not_full;
-                                
+
 wire  [FIFO_DATA_WIDTH - 1:0]   w_fifo_r_data;
 wire                            w_fifo_r_stb;
 wire                            w_fifo_empty;
@@ -194,6 +196,7 @@ axi_lite_slave #(
 
 
 
+//Convert the Incoming AXI Stream Signals to FIFO Signals
 axis_2_fifo_adapter #(
   .AXIS_DATA_WIDTH    (AXIS_DATA_WIDTH      )
 )a2fa(
@@ -227,6 +230,7 @@ fifo #(
   .o_fifo_not_empty   (w_fifo_not_empty     )
 );
 
+//Convert the FIFO Signals to AXI Stream Signals
 fifo_2_axis_adapter #(
   .AXIS_DATA_WIDTH    (AXIS_DATA_WIDTH      )
 )f2aa(
@@ -271,11 +275,11 @@ always @ (posedge i_axi_clk) begin
       //From master
       case (w_reg_address)
         REG_CONTROL: begin
-          //$display("Incomming data on address: 0x%h: 0x%h", w_reg_address, w_reg_in_data);
+          //$display("Incoming data on address: 0x%h: 0x%h", w_reg_address, w_reg_in_data);
           r_control                       <=  w_reg_in_data;
         end
         REG_VERSION: begin
-          //$display("Incomming data on address: 0x%h: 0x%h", w_reg_address, w_reg_in_data);
+          //$display("Incoming data on address: 0x%h: 0x%h", w_reg_address, w_reg_in_data);
         end
         default: begin
           $display ("Unknown address: 0x%h", w_reg_address);
