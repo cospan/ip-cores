@@ -138,6 +138,17 @@ def test_axis_write(dut):
     yield Timer(CLK_PERIOD * 100)
 
 
+'''
+A note about source idles and sink back pressure.
+
+When generating the source and sink idle the values inserted do not always
+match up with the data, instead the values will repeat, for example
+if you were to insert a source idle at 0th clock cycle in a list that
+is 10 elements long and then you used a timer to delay the start by
+5 clock cycles before starting a transaction the idle will happen on the
+10th CLOCK cycle but will happen on the 6th cycle of the data transaction
+'''
+
 @cocotb.test(skip = False)
 def test_axis_write_and_read(dut):
     """
@@ -245,9 +256,12 @@ def test_axis_write_and_read_with_sink_back_preassure(dut):
     #yield axis_sink.reset()
 
     sdata = [list(range(DATA_COUNT))]
+
+    # Adjust sink back pressure here
     bp_list = [0] * DATA_COUNT
 
     bp_list[DATA_COUNT - 1] = 1
+    # Apply back pressure after the 2nd value is read
     bp_list[2] = 1
     axis_sink.insert_backpreassure_list(bp_list)
 
@@ -287,12 +301,20 @@ def test_axis_write_and_read_with_sink_idle_and_back_preassure(dut):
     yield reset_dut(dut)
 
     sdata = [list(range(DATA_COUNT))]
+
+    # Adjust sink back pressure here
     bp_list = [0] * DATA_COUNT
 
     bp_list[DATA_COUNT - 1] = 1
+    # Apply back pressure after the 2nd value is read
     bp_list[2] = 1
+    # Apply back pressure after the 4th value is read
+    #bp_list[4] = 1
 
+
+    # Adjust source idle here
     idle_list = [0] * DATA_COUNT
+    # Insert an IDLE at clock 1
     idle_list[1] = 1
 
     axis_sink.insert_backpreassure_list(bp_list)
