@@ -27,7 +27,8 @@ SOFTWARE.
  *  XXX: Currently there is no strobe level access
  *
  * Changes:
- *  3/24/2017: Initial Commit
+ *   3/24/2017: Initial Commit
+ *  10/04/2021: Removed parameter for data width, ATM only use 32-bit
  */
 
 `timescale 1ps / 1ps
@@ -35,9 +36,7 @@ SOFTWARE.
 `include "axi_defines.v"
 
 module axi_lite_slave #(
-  parameter ADDR_WIDTH          = 16, // This shouldn't be larger than 16 or you will need to deal with the address of the xilinx assigned address
-  parameter DATA_WIDTH          = 32,
-  parameter STROBE_WIDTH        = (DATA_WIDTH / 8)
+  parameter ADDR_WIDTH          = 16 // This shouldn't be larger than 16 or you will need to deal with the address of the xilinx assigned address
 
 )(
 
@@ -52,8 +51,8 @@ module axi_lite_slave #(
   //Write Data Channel
   input                               i_wvalid,
   output  reg                         o_wready,
-  input       [STROBE_WIDTH - 1:0]    i_wstrb,
-  input       [DATA_WIDTH - 1: 0]     i_wdata,
+  input       [31: 0]                 i_wdata,
+  input       [3: 0]                  i_wstrb,
 
   //Write Response Channel
   output  reg                         o_bvalid,
@@ -69,7 +68,7 @@ module axi_lite_slave #(
   output  reg                         o_rvalid,
   input                               i_rready,
   output  reg [1:0]                   o_rresp,
-  output  reg [DATA_WIDTH - 1: 0]     o_rdata,
+  output  reg [31: 0]                 o_rdata,
 
 
 
@@ -77,11 +76,11 @@ module axi_lite_slave #(
   output  reg                         o_reg_in_rdy,
   input                               i_reg_in_ack_stb,
   output  reg [ADDR_WIDTH - 1: 0]     o_reg_address,
-  output  reg [DATA_WIDTH - 1: 0]     o_reg_in_data,
+  output  reg [31: 0]                 o_reg_in_data,
 
   output  reg                         o_reg_out_req,
   input                               i_reg_out_rdy_stb,
-  input       [DATA_WIDTH - 1: 0]     i_reg_out_data,
+  input       [31: 0]                 i_reg_out_data,
   input                               i_reg_invalid_addr
 
 );

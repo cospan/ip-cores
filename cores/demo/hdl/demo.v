@@ -41,8 +41,6 @@ SOFTWARE.
 
 module demo #(
   parameter ADDR_WIDTH          = 16,
-  parameter DATA_WIDTH          = 32,
-  parameter STROBE_WIDTH        = (DATA_WIDTH / 8),
   parameter INVERT_AXI_RESET    = 1
 )(
   input                               i_axi_clk,
@@ -56,8 +54,8 @@ module demo #(
   //Write Data Channel
   input                               i_wvalid,
   output                              o_wready,
-  input       [STROBE_WIDTH - 1:0]    i_wstrb,
-  input       [DATA_WIDTH - 1: 0]     i_wdata,
+  input       [31: 0]                 i_wdata,
+  input       [3:0]                   i_wstrb,
 
   //Write Response Channel
   output                              o_bvalid,
@@ -73,7 +71,7 @@ module demo #(
   output                              o_rvalid,
   input                               i_rready,
   output      [1:0]                   o_rresp,
-  output      [DATA_WIDTH - 1: 0]     o_rdata
+  output      [31: 0]                 o_rdata
 );
 //local parameters
 
@@ -93,26 +91,24 @@ reg                         r_reg_invalid_addr;
 
 wire                        w_reg_in_rdy;
 reg                         r_reg_in_ack_stb;
-wire  [DATA_WIDTH - 1: 0]   w_reg_in_data;
+wire  [31: 0]               w_reg_in_data;
 
 wire                        w_reg_out_req;
 reg                         r_reg_out_rdy_stb;
-reg   [DATA_WIDTH - 1: 0]   r_reg_out_data;
+reg   [31: 0]               r_reg_out_data;
 
 
 //User Registers
-reg   [DATA_WIDTH - 1: 0]   r_control;
-wire  [DATA_WIDTH - 1: 0]   w_version;
-reg   [DATA_WIDTH - 1: 0]   r_demo;
+reg   [31: 0]               r_control;
+wire  [31: 0]               w_version;
+reg   [31: 0]               r_demo;
 
 
 //submodules
 
 //Convert AXI Slave bus to a simple register/address strobe
 axi_lite_slave #(
-  .ADDR_WIDTH         (ADDR_WIDTH           ),
-  .DATA_WIDTH         (DATA_WIDTH           )
-
+  .ADDR_WIDTH         (ADDR_WIDTH           )
 ) axi_lite_reg_interface (
   .clk                (i_axi_clk            ),
   .rst                (w_axi_rst            ),
@@ -124,8 +120,8 @@ axi_lite_slave #(
 
   .i_wvalid           (i_wvalid             ),
   .o_wready           (o_wready             ),
-  .i_wstrb            (i_wstrb              ),
   .i_wdata            (i_wdata              ),
+  .i_wstrb            (i_wstrb              ),
 
   .o_bvalid           (o_bvalid             ),
   .i_bready           (i_bready             ),
