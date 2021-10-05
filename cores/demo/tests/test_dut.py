@@ -10,18 +10,17 @@ from cocotb.triggers import Timer
 from cocotb.triggers import RisingEdge
 from cocotb.triggers import FallingEdge
 
-from cocotb_bus.drivers.amba import AXI4LiteMaster
-from demo_driver import demoDriver
+from demo_driver import DemoDriver
 
 CLK_PERIOD = 10
 
-MODULE_PATH = os.path.join(os.path.dirname(__file__), os.pardir, "rtl")
+MODULE_PATH = os.path.join(os.path.dirname(__file__), os.pardir, "hdl")
 MODULE_PATH = os.path.abspath(MODULE_PATH)
 
 def setup_dut(dut):
     #Fork any simulation specific co-routines
     #cocotb.fork(my_sim_coroutine(dut))
-    pass
+    cocotb.fork(Clock(dut.clk, CLK_PERIOD).start())
 
 # A simulation specific co-routine to stimulate the DUT in some way
 #       At the moment do nothing
@@ -50,8 +49,9 @@ def test_read_version(dut):
     Expected Results:
         Read from the version register
     """
+    dut._log.setLevel(logging.WARNING)
     setup_dut(dut)
-    demo = demoDriver(dut, CLK_PERIOD, False)
+    demo = DemoDriver(dut, dut.clk, dut.rst, CLK_PERIOD, False)
     dut.test_id <= 0
     yield reset_dut(dut)
 
@@ -77,7 +77,7 @@ def test_write_control(dut):
         Read from the version register
     """
     setup_dut(dut)
-    demo = demoDriver(dut, CLK_PERIOD, False)
+    demo = DemoDriver(dut, dut.clk, dut.rst, CLK_PERIOD, False)
     dut.test_id <= 1
     yield reset_dut(dut)
 
@@ -101,7 +101,7 @@ def test_read_control(dut):
         Read from the version register
     """
     setup_dut(dut)
-    demo = demoDriver(dut, CLK_PERIOD, False)
+    demo = DemoDriver(dut, dut.clk, dut.rst, CLK_PERIOD, False)
     dut.test_id <= 2
     yield reset_dut(dut)
 
@@ -125,7 +125,7 @@ def test_write_demo(dut):
         Read from the version register
     """
     setup_dut(dut)
-    demo = demoDriver(dut, CLK_PERIOD, False)
+    demo = DemoDriver(dut, dut.clk, dut.rst, CLK_PERIOD, False)
     dut.test_id <= 3
     yield reset_dut(dut)
 
@@ -149,7 +149,7 @@ def test_read_demo(dut):
         Read from the version register
     """
     setup_dut(dut)
-    demo = demoDriver(dut, CLK_PERIOD, False)
+    demo = DemoDriver(dut, dut.clk, dut.rst, CLK_PERIOD, False)
     dut.test_id <= 4
     yield reset_dut(dut)
 
