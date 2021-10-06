@@ -255,38 +255,38 @@ assign w_version[`VERSION_PAD_RANGE]  = 0;
 //synchronous logic
 always @ (posedge i_axi_clk) begin
   //De-assert
-  r_reg_in_ack                            <= 0;
-  r_reg_out_rdy                           <= 0;
-  r_reg_invalid_addr                      <= 0;
+  r_reg_in_ack                                <= 0;
+  r_reg_out_rdy                               <= 0;
+  r_reg_invalid_addr                          <= 0;
 
   if (w_axi_rst) begin
-    r_reg_out_data                        <= 0;
+    r_reg_out_data                            <= 0;
 
     //Reset the temporary Data
-    r_width                               <= `DEFAULT_WIDTH;
-    r_height                              <= `DEFAULT_HEIGHT;
+    r_width                                   <= `DEFAULT_WIDTH;
+    r_height                                  <= `DEFAULT_HEIGHT;
 
-    r_enable                              <= 0;
-    r_rgba_format                         <= 1;
-    r_interval                            <= `DEFAULT_INTERVAL;
-    r_mode                                <= MODE_CB;
+    r_enable                                  <= 0;
+    r_rgba_format                             <= 1;
+    r_interval                                <= `DEFAULT_INTERVAL;
+    r_mode                                    <= MODE_CB;
 
-    r_ref_x0                              <= 0;
-    r_ref_y0                              <= 0;
+    r_ref_x0                                  <= 0;
+    r_ref_y0                                  <= 0;
 
-    r_ref_x1                              <= 0;
-    r_ref_y1                              <= 0;
-    r_ref_fg_color                        <= {8'hFF, `COLOR_WHITE};
-    r_ref_bg_color                        <= {8'hFF, `COLOR_BLACK};
-    r_alpha                               <= 8'hFF;
+    r_ref_x1                                  <= 0;
+    r_ref_y1                                  <= 0;
+    r_ref_fg_color                            <= {8'hFF, `COLOR_WHITE};
+    r_ref_bg_color                            <= {8'hFF, `COLOR_BLACK};
+    r_alpha                                   <= 8'hFF;
 
-//    r_animate_en                          <= 0;
-//    r_animate_x_dir                       <= 0;
-//    r_animate_y_dir                       <= 0;
-//    r_animate_bounce                      <= 0;
-//    r_animate_count_div                   <= 0;
-//    r_animate_x_step                      <= 0;
-//    r_animate_y_step                      <= 0;
+//    r_animate_en                              <= 0;
+//    r_animate_x_dir                           <= 0;
+//    r_animate_y_dir                           <= 0;
+//    r_animate_bounce                          <= 0;
+//    r_animate_count_div                       <= 0;
+//    r_animate_x_step                          <= 0;
+//    r_animate_y_step                          <= 0;
 
   end
   else begin
@@ -295,47 +295,47 @@ always @ (posedge i_axi_clk) begin
       //From master
       case (w_reg_address)
         REG_CONTROL: begin
-          r_enable                        <=  w_reg_in_data[`CTL_BIT_ENABLE];
-          r_rgba_format                   <=  w_reg_in_data[`CTL_BIT_RGBA_FMT];
+          r_enable                            <=  w_reg_in_data[`CTL_BIT_ENABLE];
+          r_rgba_format                       <=  w_reg_in_data[`CTL_BIT_RGBA_FMT];
         end
         REG_WIDTH: begin
-          r_width                         <=  w_reg_in_data[WIDTH_SIZE - 1: 0];
+          r_width                             <=  w_reg_in_data[WIDTH_SIZE - 1: 0];
         end
         REG_HEIGHT: begin
-          r_height                        <=  w_reg_in_data[HEIGHT_SIZE - 1: 0];
+          r_height                            <=  w_reg_in_data[HEIGHT_SIZE - 1: 0];
         end
         REG_INTERVAL: begin
-          r_interval                      <=  w_reg_in_data[INTERVAL_SIZE - 1: 0];
+          r_interval                          <=  w_reg_in_data[INTERVAL_SIZE - 1: 0];
         end
         REG_MODE_SEL: begin
-          r_mode                          <=  w_reg_in_data;
+          r_mode                              <=  w_reg_in_data;
         end
         REG_XY_REF0: begin
-          r_ref_x0                        <=  w_reg_in_data[`BM_REF_X];
-          r_ref_y0                        <=  w_reg_in_data[`BM_REF_Y];
+          r_ref_x0                            <=  w_reg_in_data[`BM_REF_X];
+          r_ref_y0                            <=  w_reg_in_data[`BM_REF_Y];
         end
         REG_XY_REF1: begin
-          r_ref_x1                        <=  w_reg_in_data[`BM_REF_X];
-          r_ref_y1                        <=  w_reg_in_data[`BM_REF_Y];
+          r_ref_x1                            <=  w_reg_in_data[`BM_REF_X];
+          r_ref_y1                            <=  w_reg_in_data[`BM_REF_Y];
         end
         REG_FG_COLOR_REF: begin
-          r_ref_fg_color                  <=  w_reg_in_data;
+          r_ref_fg_color                      <=  w_reg_in_data;
         end
         REG_BG_COLOR_REF: begin
-          r_ref_bg_color                  <=  w_reg_in_data;
+          r_ref_bg_color                      <=  w_reg_in_data;
         end
         REG_ALPHA: begin
-          r_alpha                         <=  w_reg_in_data[7:0];
+          r_alpha                             <=  w_reg_in_data[7:0];
         end
 
 //        REG_ANIMATE: begin
-//          r_animate_en                    <=  w_reg_in_data[`ANMT_BIT_ENABLE];
-//          r_animate_x_dir                 <=  w_reg_in_data[`ANMT_BIT_X_DIR];
-//          r_animate_y_dir                 <=  w_reg_in_data[`ANMT_BIT_Y_DIR];
-//          r_animate_bounce                <=  w_reg_in_data[`ANMT_BIT_BOUNT];
-//          r_animate_count_div             <=  w_reg_in_data[`ANMT_BR_COUNT_DIV];
-//          r_animate_x_step                <=  w_reg_in_data[`ANMT_BR_X_STEP];
-//          r_animate_y_step                <=  w_reg_in_data[`ANMT_BR_Y_STEP];
+//          r_animate_en                        <=  w_reg_in_data[`ANMT_BIT_ENABLE];
+//          r_animate_x_dir                     <=  w_reg_in_data[`ANMT_BIT_X_DIR];
+//          r_animate_y_dir                     <=  w_reg_in_data[`ANMT_BIT_Y_DIR];
+//          r_animate_bounce                    <=  w_reg_in_data[`ANMT_BIT_BOUNT];
+//          r_animate_count_div                 <=  w_reg_in_data[`ANMT_BR_COUNT_DIV];
+//          r_animate_x_step                    <=  w_reg_in_data[`ANMT_BR_X_STEP];
+//          r_animate_y_step                    <=  w_reg_in_data[`ANMT_BR_Y_STEP];
 //        end
         default: begin
           $display ("Unknown address: 0x%h", w_reg_address);
@@ -343,29 +343,29 @@ always @ (posedge i_axi_clk) begin
       endcase
       if (w_reg_address > MAX_ADDR) begin
         //Tell the host they wrote to an invalid address
-        r_reg_invalid_addr                <= 1;
+        r_reg_invalid_addr                    <= 1;
       end
       //Tell the AXI Slave Control we're done with the data
-      r_reg_in_ack                        <= 1;
+      r_reg_in_ack                            <= 1;
     end
     else if (w_reg_out_req) begin
       //To master
       //$display("User is reading from address 0x%0h", w_reg_address);
       case (w_reg_address)
         REG_CONTROL: begin
-          r_reg_out_data                    <= 32'h0;
-          r_reg_out_data[`CTL_BIT_ENABLE]   <=  r_enable;
-          r_reg_out_data[`CTL_BIT_RGBA_FMT] <=  r_rgba_format;
+          r_reg_out_data                      <= 32'h0;
+          r_reg_out_data[`CTL_BIT_ENABLE]     <=  r_enable;
+          r_reg_out_data[`CTL_BIT_RGBA_FMT]   <=  r_rgba_format;
         end
         REG_STATUS: begin
-          r_reg_out_data                  <= 32'h0;
+          r_reg_out_data                      <= 32'h0;
         end
         REG_WIDTH: begin
-          r_reg_out_data                  <= 32'h0;
+          r_reg_out_data                      <= 32'h0;
           r_reg_out_data[WIDTH_SIZE - 1:0]<= r_width;
         end
         REG_HEIGHT: begin
-          r_reg_out_data                  <= 32'h0;
+          r_reg_out_data                      <= 32'h0;
           r_reg_out_data[HEIGHT_SIZE - 1:0]   <= r_height;
         end
         REG_INTERVAL: begin
@@ -404,18 +404,18 @@ always @ (posedge i_axi_clk) begin
 //          r_reg_out_data[`ANMT_BR_Y_STEP]     <=  r_animate_y_step;
 //        end
         REG_VERSION: begin
-          r_reg_out_data                  <= w_version;
+          r_reg_out_data                      <= w_version;
         end
         default: begin
-          r_reg_out_data                  <= 32'h00;
-          //r_reg_invalid_addr              <= 1;
+          r_reg_out_data                      <= 32'h00;
+          //r_reg_invalid_addr                  <= 1;
         end
       endcase
       //Tell the AXI Slave to send back this packet
       if (w_reg_address > MAX_ADDR) begin
-        r_reg_invalid_addr                <= 1;
+        r_reg_invalid_addr                    <= 1;
       end
-      r_reg_out_rdy                       <= 1;
+      r_reg_out_rdy                           <= 1;
     end
   end
 end
@@ -475,6 +475,7 @@ always @ (posedge i_axi_clk) begin
           o_axis_out_tuser            <=  0;
           if (o_axis_out_tlast) begin
             state                     <=  END_LINE;
+            y                         <=  y + 1;
             x                         <=  0;
           end
           else begin
@@ -483,8 +484,8 @@ always @ (posedge i_axi_clk) begin
         end
       end
       END_LINE: begin
-        if ((y + 1)< r_height) begin
-          y                           <=  y + 1;
+        if (y < r_height) begin
+          //Go to the next line
           state                       <=  DRAW;
         end
         else begin
