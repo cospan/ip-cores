@@ -1,0 +1,81 @@
+[*]
+[*] GTKWave Analyzer v3.3.103 (w)1999-2019 BSI
+[*] Thu May  6 11:42:42 2021
+[*]
+[dumpfile] "/home/cospan/Projects/nysa-verilog/verilog/axi/slave/axi_graphics/cocotb/design.vcd"
+[dumpfile_mtime] "Wed May  5 11:09:23 2021"
+[dumpfile_size] 42923
+[savefile] "/home/cospan/Projects/nysa-verilog/verilog/axi/slave/axi_graphics/cocotb/waveforms.gtkw"
+[timestart] 0
+[size] 2560 1377
+[pos] -9 -35
+*-8.205360 86003 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+[treeopen] tb_axi_graphics.
+[treeopen] tb_axi_graphics.dut.
+[sst_width] 416
+[signals_width] 489
+[sst_expanded] 1
+[sst_vpaned_height] 423
+@28
+tb_axi_graphics.clk
+tb_axi_graphics.rst
+@22
+tb_axi_graphics.test_id[7:0]
+@200
+-
+-
+@800200
+-AXI Slave
+@22
+tb_axi_graphics.AXIML_AWADDR[31:0]
+@28
+tb_axi_graphics.AXIML_AWVALID
+tb_axi_graphics.AXIML_AWREADY
+@200
+-
+@28
+tb_axi_graphics.AXIML_WVALID
+tb_axi_graphics.AXIML_WREADY
+@22
+tb_axi_graphics.AXIML_WSTRB[3:0]
+tb_axi_graphics.AXIML_WDATA[31:0]
+@200
+-
+@22
+tb_axi_graphics.AXIML_ARADDR[31:0]
+@28
+tb_axi_graphics.AXIML_ARVALID
+tb_axi_graphics.AXIML_ARREADY
+@200
+-
+@29
+tb_axi_graphics.AXIML_RVALID
+@28
+tb_axi_graphics.AXIML_RREADY
+@22
+tb_axi_graphics.AXIML_RDATA[31:0]
+@28
+tb_axi_graphics.AXIML_RRESP[1:0]
+@200
+-
+@28
+tb_axi_graphics.AXIML_BVALID
+tb_axi_graphics.AXIML_BREADY
+tb_axi_graphics.AXIML_BRESP[1:0]
+@1000200
+-AXI Slave
+@200
+-
+@800200
+-AXI Stream
+@28
+tb_axi_graphics.AXIS_USER[1:0]
+tb_axi_graphics.AXIS_VALID
+tb_axi_graphics.AXIS_READY
+tb_axi_graphics.AXIS_LAST
+@22
+tb_axi_graphics.AXIS_DATA[31:0]
+@1000200
+-AXI Stream
+[pattern_trace] 1
+[pattern_trace] 0
