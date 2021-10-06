@@ -1,0 +1,4 @@
+0 IDLE
+1 DRAW
+2 END_LINE
+

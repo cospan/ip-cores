@@ -128,7 +128,7 @@ async def draw_square(dut):
     await driver.set_width(WIDTH)
     await driver.set_height(HEIGHT)
     await driver.set_ref0_xy(1, 1)
-    await driver.set_ref1_xy(14, 2)
+    await driver.set_ref1_xy(2, 2)
     await driver.set_mode(6)
     await driver.enable(True)
     dut._log.info("Done")

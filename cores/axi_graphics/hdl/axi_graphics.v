@@ -7,15 +7,15 @@
 
 `timescale 1ps / 1ps
 
-`define MAJOR_VERSION             1
-`define MINOR_VERSION             0
-`define REVISION                  0
+`define MAJOR_VERSION           1
+`define MINOR_VERSION           0
+`define REVISION                0
 
-`define MAJOR_RANGE               31:28
-`define MINOR_RANGE               27:20
-`define REVISION_RANGE            19:16
+`define MAJOR_RANGE             31:28
+`define MINOR_RANGE             27:20
+`define REVISION_RANGE          19:16
 
-`define VERSION_PAD_RANGE         15:0
+`define VERSION_PAD_RANGE       15:0
 
 `define DEFAULT_WIDTH           640
 `define DEFAULT_HEIGHT          480
@@ -114,7 +114,7 @@ localparam  REG_BG_COLOR_REF  =   9  << 2;
 localparam  REG_ALPHA         =   10 << 2;
 localparam  REG_ANIMATE       =   11 << 2;
 
-localparam  REG_VERSION       =   20;
+localparam  REG_VERSION       =   20 << 2;
 
 localparam  MAX_ADDR          =   REG_VERSION;
 
@@ -420,7 +420,7 @@ always @ (posedge i_axi_clk) begin
   end
 end
 
-//Interval Timer
+//Generated a start pulse for a new frame
 always @ (posedge i_axi_clk) begin
   r_start_stb                         <=  0;
   if (w_axi_rst) begin
@@ -446,7 +446,7 @@ reg  [3:0]                r_cm_index;
 assign o_axis_out_tlast     = (x == (r_width - 1));
 assign o_axis_out_tvalid    = (state == DRAW);
 
-//Main Video Transmitter Controller
+//Generate timing signals for X and Y signals
 always @ (posedge i_axi_clk) begin
   r_frame_finished                    <=  0;
   if (w_axi_rst) begin
@@ -483,7 +483,7 @@ always @ (posedge i_axi_clk) begin
         end
       end
       END_LINE: begin
-        if (y < r_height) begin
+        if ((y + 1)< r_height) begin
           y                           <=  y + 1;
           state                       <=  DRAW;
         end
@@ -513,6 +513,8 @@ always @ (posedge i_axi_clk) begin
 end
 
 
+
+//Asynchronous color block
 
 wire [WIDTH_SIZE - 1: 0]  w_start_x;
 wire [HEIGHT_SIZE - 1: 0] w_start_y;
