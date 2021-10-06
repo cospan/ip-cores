@@ -9,31 +9,31 @@ input                               clk,
 input                               rst,
 
 //Write Address Channel
-input                               AXIML_AWVALID,
-input       [ADDR_WIDTH - 1: 0]     AXIML_AWADDR,
-output                              AXIML_AWREADY,
+input                               aximl_awvalid,
+input       [ADDR_WIDTH - 1: 0]     aximl_awaddr,
+output                              aximl_awready,
 
 //Write Data Channel
-input                               AXIML_WVALID,
-output                              AXIML_WREADY,
-input       [31: 0]                 AXIML_WDATA,
-input       [3: 0]                  AXIML_WSTRB,
+input                               aximl_wvalid,
+output                              aximl_wready,
+input       [31: 0]                 aximl_wdata,
+input       [3: 0]                  aximl_wstrb,
 
 //Write Response Channel
-output                              AXIML_BVALID,
-input                               AXIML_BREADY,
-output      [1:0]                   AXIML_BRESP,
+output                              aximl_bvalid,
+input                               aximl_bready,
+output      [1:0]                   aximl_bresp,
 
 //Read Address Channel
-input                               AXIML_ARVALID,
-output                              AXIML_ARREADY,
-input       [ADDR_WIDTH - 1: 0]     AXIML_ARADDR,
+input                               aximl_arvalid,
+output                              aximl_arready,
+input       [ADDR_WIDTH - 1: 0]     aximl_araddr,
 
 //Read Data Channel
-output                              AXIML_RVALID,
-input                               AXIML_RREADY,
-output      [1:0]                   AXIML_RRESP,
-output      [31: 0]                 AXIML_RDATA
+output                              aximl_rvalid,
+input                               aximl_rready,
+output      [1:0]                   aximl_rresp,
+output      [31: 0]                 aximl_rdata
 
 );
 
@@ -56,31 +56,31 @@ NAME #(
   .i_axi_rst        (r_rst          ),
 
 
-  .i_awvalid        (AXIML_AWVALID  ),
-  .i_awaddr         (AXIML_AWADDR   ),
-  .o_awready        (AXIML_AWREADY  ),
+  .i_awvalid        (aximl_awvalid  ),
+  .i_awaddr         (aximl_awaddr   ),
+  .o_awready        (aximl_awready  ),
 
 
-  .i_wvalid         (AXIML_WVALID   ),
-  .o_wready         (AXIML_WREADY   ),
-  .i_wdata          (AXIML_WDATA    ),
-  .i_wstrb          (AXIML_WSTRB    ),
+  .i_wvalid         (aximl_wvalid   ),
+  .o_wready         (aximl_wready   ),
+  .i_wdata          (aximl_wdata    ),
+  .i_wstrb          (aximl_wstrb    ),
 
 
-  .o_bvalid         (AXIML_BVALID   ),
-  .i_bready         (AXIML_BREADY   ),
-  .o_bresp          (AXIML_BRESP    ),
+  .o_bvalid         (aximl_bvalid   ),
+  .i_bready         (aximl_bready   ),
+  .o_bresp          (aximl_bresp    ),
 
 
-  .i_arvalid        (AXIML_ARVALID  ),
-  .o_arready        (AXIML_ARREADY  ),
-  .i_araddr         (AXIML_ARADDR   ),
+  .i_arvalid        (aximl_arvalid  ),
+  .o_arready        (aximl_arready  ),
+  .i_araddr         (aximl_araddr   ),
 
 
-  .o_rvalid         (AXIML_RVALID   ),
-  .i_rready         (AXIML_RREADY   ),
-  .o_rresp          (AXIML_RRESP    ),
-  .o_rdata          (AXIML_RDATA    )
+  .o_rvalid         (aximl_rvalid   ),
+  .i_rready         (aximl_rready   ),
+  .o_rresp          (aximl_rresp    ),
+  .o_rdata          (aximl_rdata    )
 
 );
 
