@@ -1,15 +1,15 @@
 [*]
 [*] GTKWave Analyzer v3.3.103 (w)1999-2019 BSI
-[*] Wed Oct  6 13:13:28 2021
+[*] Wed Oct  6 14:43:44 2021
 [*]
 [dumpfile] "/home/cospan/Projects/ip-cores/cores/axi_graphics/tests/design.vcd"
-[dumpfile_mtime] "Wed Oct  6 13:11:49 2021"
-[dumpfile_size] 27351
+[dumpfile_mtime] "Wed Oct  6 14:22:03 2021"
+[dumpfile_size] 26097
 [savefile] "/home/cospan/Projects/ip-cores/cores/axi_graphics/tests/waveforms.gtkw"
-[timestart] 599
+[timestart] 519
 [size] 1920 1137
-[pos] -1921 -1
-*-5.205360 656 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+[pos] -1 -1
+*-6.205360 655 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
 [treeopen] tb_axi_lite_slave.
 [treeopen] tb_axi_lite_slave.dut.
 [sst_width] 416
@@ -23,9 +23,9 @@ tb_axi_lite_slave.rst
 -
 @22
 tb_axi_lite_slave.test_id[7:0]
-@200
+@201
 -
-@800200
+@c00200
 -AXI Slave
 @22
 tb_axi_lite_slave.aximl_araddr[31:0]
@@ -54,18 +54,9 @@ tb_axi_lite_slave.aximl_wready
 tb_axi_lite_slave.aximl_wstrb[3:0]
 @28
 tb_axi_lite_slave.aximl_wvalid
-@22
-tb_axi_lite_slave.axis_out_tdata[31:0]
-@28
-tb_axi_lite_slave.axis_out_tlast
-tb_axi_lite_slave.axis_out_tready
-tb_axi_lite_slave.axis_out_tuser
-tb_axi_lite_slave.axis_out_tvalid
-@1000200
+@1401200
 -AXI Slave
-@200
--
-@800200
+@c00200
 -AXI Stream
 @22
 tb_axi_lite_slave.axis_out_tdata[31:0]
@@ -74,10 +65,15 @@ tb_axi_lite_slave.axis_out_tlast
 tb_axi_lite_slave.axis_out_tready
 tb_axi_lite_slave.axis_out_tuser
 tb_axi_lite_slave.axis_out_tvalid
-@1000200
+@1401200
 -AXI Stream
 @200
 -
+@2022
+[color] 7
+^1 /home/cospan/Projects/ip-cores/cores/axi_graphics/tests/state.txt
+tb_axi_lite_slave.dut.state[3:0]
+@200
 -
 @22
 tb_axi_lite_slave.dut.r_width[11:0]
@@ -85,9 +81,19 @@ tb_axi_lite_slave.dut.r_height[11:0]
 @200
 -
 @22
+tb_axi_lite_slave.dut.y[11:0]
+tb_axi_lite_slave.dut.x[11:0]
+@200
+-
+@22
 tb_axi_lite_slave.dut.r_ref_x0[11:0]
 tb_axi_lite_slave.dut.r_ref_x1[11:0]
 tb_axi_lite_slave.dut.r_ref_y0[11:0]
 tb_axi_lite_slave.dut.r_ref_y1[11:0]
+@200
+-
+-
+-
+-
 [pattern_trace] 1
 [pattern_trace] 0

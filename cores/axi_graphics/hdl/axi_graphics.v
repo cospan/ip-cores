@@ -501,7 +501,7 @@ always @ (posedge i_axi_clk) begin
 
     //Specifically for color bars
     if (r_mode == MODE_CB) begin
-      if ((x < 1) || (x >= r_width)) begin
+      if ((x == 0) || ((x + 1) >= r_width)) begin
         r_temp_width                  <=  (r_width >> 3);
         r_cm_index                    <=  0;
       end
@@ -513,6 +513,8 @@ always @ (posedge i_axi_clk) begin
   end
 end
 
+//wire [15:0] w_cb_len;
+//assign w_cb_len = (x >> 3);
 
 
 //Asynchronous color block
