@@ -1,86 +1,17 @@
-import os
-import sys
-import time
-import cocotb
-#from cocotb.result import ReturnValue
-from cocotb.clock import Clock
 from cocotb.triggers import Timer
-from cocotb_bus.drivers.amba import AXI4LiteMaster
+from cocotbext.axi import AxiLiteMaster, AxiLiteBus
 
 class Driver(object):
 
-    def __init__(self, dut, clock, clk_period, MASTER_lightshow="AXIML", debug=False):
-
+    def __init__(self, dut, clock, reset, clk_period, name="AXIML", debug=False):
         self.debug = debug
         self.dut = dut
         self.clock = clock
         self.clk_period = clk_period
-        self.dut.rst <= 1
-        self.dut.test_id.value = 0
-        self.axim = AXI4LiteMaster(dut, MASTER_lightshow, self.clock)
-        cocotb.fork(Clock(self.clock, clk_period).start())
+        self.axim = AxiLiteMaster(AxiLiteBus.from_prefix(dut, "aximl"), clock, reset)
         dut._log.debug ("Started")
 
-    @cocotb.coroutine
-    def read(self, address, length = 1):
-        """read
-
-        Generic read command used to read data from a Nysa image, this will be
-        overriden based on the communication method with the FPGA board
-
-        standard methods include
-
-        UART, FTDI Synchronous FIFO, Cypress USB 3.0 Interface,
-
-        Args:
-          length (int): Number of 32 bit words to read from the FPGA
-          address (int):  Address of the register/memory to read
-          disable_auto_inc (bool): if true, auto increment feature will be disabled
-
-        Returns:
-          (Array of unsigned bytes): A byte array containtin the raw data
-                                     returned from Nysa
-
-        Raises:
-          AssertionError: This function must be overriden by a board specific
-          implementation
-        """
-        data = []
-        for i in range(length):
-            d = yield self.axim.read((address + (i << 2)))
-            data.append(int(d))
-            yield Timer(self.clk_period * 10)
-        #raise ReturnValue(data)
-        return data
-
-    @cocotb.coroutine
-    def write(self, address, data):
-        """write
-
-        Generic write command usd to write data to a Nysa image, this will be
-        overriden based on the communication method with the specific FPGA board
-
-        Args:
-            address (int): Address of the register/memory to read
-            data (array of unsigned bytes): Array of raw bytes to send to the
-                                           device
-            disable_auto_inc (bool): if true, auto increment feature will be disabled
-        Returns:
-            Nothing
-
-        Raises:
-            AssertionError: This function must be overriden by a board specific
-                implementation
-        """
-        if type(data) is not list:
-            data = [data]
-
-        for i in range(len(data)):
-            yield self.axim.write(address + (i << 2), data[i])
-            yield Timer(self.clk_period * 10)
-
-    @cocotb.coroutine
-    def read_register(self, address):
+    async def read_register(self, address):
         """read_register
 
         Reads a single register from the read command and then converts it to an
@@ -91,16 +22,11 @@ class Driver(object):
 
         Returns:
           (int): 32-bit unsigned register value
-
-        Raises:
-          NysaCommError: Error in communication
         """
-        data = yield self.read(address, 1)
-        #raise ReturnValue(data[0])
-        return data[0]
+        data = await self.axim.read(address, 4)
+        return int.from_bytes(data.data, byteorder="little")
 
-    @cocotb.coroutine
-    def write_register(self, address, value):
+    async def write_register(self, address, value):
         """write_register
 
         Writes a single register from a 32-bit unsingned integer
@@ -111,14 +37,10 @@ class Driver(object):
 
         Returns:
           Nothing
-
-        Raises:
-          NysaCommError: Error in communication
         """
-        yield self.write(address, value)
+        await self.axim.write(address, value.to_bytes(4, byteorder="little"))
 
-    @cocotb.coroutine
-    def enable_register_bit(self, address, bit, enable):
+    async def enable_register_bit(self, address, bit, enable):
         """enable_register_bit
 
         Pass a bool value to set/clear a bit
@@ -130,17 +52,13 @@ class Driver(object):
 
         Returns:
           Nothing
-
-        Raises:
-          NysaCommError: Error in communication
         """
         if enable:
-            yield self.set_register_bit(address, bit)
+            await self.set_register_bit(address, bit)
         else:
-            yield self.clear_register_bit(address, bit)
+            await self.clear_register_bit(address, bit)
 
-    @cocotb.coroutine
-    def set_register_bit(self, address, bit):
+    async def set_register_bit(self, address, bit):
         """set_register_bit
 
         Sets an individual bit in a register
@@ -151,17 +69,13 @@ class Driver(object):
 
         Returns:
           Nothing
-
-        Raises:
-          NysaCommError: Error in communication
         """
-        register = yield self.read_register(address)
+        register = await self.read_register(address)
         bit_mask =  1 << bit
         register |= bit_mask
-        yield self.write_register(address, register)
+        await self.write_register(address, register)
 
-    @cocotb.coroutine
-    def clear_register_bit(self, address, bit):
+    async def clear_register_bit(self, address, bit):
         """clear_register_bit
 
         Clear an individual bit in a register
@@ -172,17 +86,13 @@ class Driver(object):
 
         Returns:
           Nothing
-
-        Raises:
-          NysaCommError: Error in communication
         """
-        register = yield self.read_register(address)
+        register = await self.read_register(address)
         bit_mask =  1 << bit
         register &= ~bit_mask
-        yield self.write_register(address, register)
+        await self.write_register(address, register)
 
-    @cocotb.coroutine
-    def is_register_bit_set(self, address, bit):
+    async def is_register_bit_set(self, address, bit):
         """is_register_bit_set
 
         raise ReturnValues true if an individual bit is set, false if clear
@@ -195,17 +105,13 @@ class Driver(object):
           (boolean):
             True: bit is set
             False: bit is not set
-
-        Raises:
-          NysaCommError
         """
-        register = yield self.read_register(address)
+        register = await self.read_register(address)
         bit_mask =  1 << bit
         #raise ReturnValue ((register & bit_mask) > 0)
         return (register & bit_mask) > 0
 
-    @cocotb.coroutine
-    def write_register_bit_range(self, address, high_bit, low_bit, value):
+    async def write_register_bit_range(self, address, high_bit, low_bit, value):
         """
         Write data to a range of bits within a register
 
@@ -221,9 +127,6 @@ class Driver(object):
 
         Returns:
             Nothing
-
-        Raises:
-            NysaCommError
         """
         reg = self.read_register(address)
         bitmask = (((1 << (high_bit + 1))) - (1 << low_bit))
@@ -231,8 +134,7 @@ class Driver(object):
         reg |= value << low_bit
         self.write_register(address, reg)
 
-    @cocotb.coroutine
-    def read_register_bit_range(self, address, high_bit, low_bit):
+    async def read_register_bit_range(self, address, high_bit, low_bit):
         """
         Read a range of bits within a register at address 'address'
 
@@ -248,19 +150,14 @@ class Driver(object):
         Returns (unsigned integer):
             Value within the bitfield
 
-        Raises:
-            NysaCommError
-
         """
 
-        value = yield self.read_register(address)
+        value = await self.read_register(address)
         bitmask = (((1 << (high_bit + 1))) - (1 << low_bit))
         value = value & bitmask
         value = value >> low_bit
-        #raise ReturnValue(value)
         return value
 
-    @cocotb.coroutine
-    def sleep(self, clock_count):
-        yield Timer(clock_count * self.clk_period)
+    async def sleep(self, clock_count):
+        await Timer(clock_count * self.clk_period)
 

@@ -2,17 +2,8 @@
 
 __author__ = "<your@email.here>"
 
-import sys
-import os
-import time
 from axi_driver import Driver
 
-from array import array as Array
-
-import cocotb
-from cocotb.result import ReturnValue
-from cocotb_bus.drivers.amba import AXI4LiteMaster
-from cocotb.triggers import Timer
 
 
 REG_CONTROL       = 0 << 2
@@ -33,92 +24,74 @@ BIT_CTRL_AUTO           = 1
 BIT_CTRL_TR_HIGH        = 15
 BIT_CTRL_TR_LOW         = 8
 
-class lightshowDriver (Driver):
-    def __init__(self, dut, clk_period, debug = False):
-        super(lightshowDriver, self).__init__(dut, dut.clk, clk_period, debug=debug)
+class LightshowDriver (Driver):
+    def __init__(self, dut, clock, reset, clk_period, name="aximl", debug = False):
+        super(LightshowDriver, self).__init__(dut, clock, reset, clk_period, name, debug=debug)
 
     def __del__(self):
         pass
 
-    @cocotb.coroutine
-    def get_version(self):
-        data = yield self.read_register(REG_VERSION)
+    async def get_version(self):
+        data = await self.read_register(REG_VERSION)
         return data
 
-    # Set an entire Register
-    @cocotb.coroutine
-    def set_control(self, data):
-        yield self.write_register(REG_CONTROL, data)
+    # Set the control register
+    async def set_control(self, data):
+        await self.write_register(REG_CONTROL, data)
 
     # Get Entire Register
-    @cocotb.coroutine
-    def get_control(self):
-        data = yield self.read_register(REG_CONTROL)
+    async def get_control(self):
+        data = await self.read_register(REG_CONTROL)
         return data
 
     # Set a bit within a register
-    @cocotb.coroutine
-    def enable_rgb(self, enable):
-        yield self.enable_register_bit(REG_CONTROL, BIT_CTRL_EN, enable)
+    async def enable_rgb(self, enable):
+        await self.enable_register_bit(REG_CONTROL, BIT_CTRL_EN, enable)
 
     # Set a bit within a register
-    @cocotb.coroutine
-    def enable_auto(self, enable):
-        yield self.enable_register_bit(REG_CONTROL, BIT_CTRL_AUTO, enable)
+    async def enable_auto(self, enable):
+        await self.enable_register_bit(REG_CONTROL, BIT_CTRL_AUTO, enable)
 
     # Set an entire Register
-    @cocotb.coroutine
-    def set_state_pwm_length(self, data):
-        yield self.write_register(REG_ST_PWM_LEN, data)
+    async def set_state_pwm_length(self, data):
+        await self.write_register(REG_ST_PWM_LEN, data)
 
     # Set an entire Register
-    @cocotb.coroutine
-    def set_state_transition_length(self, data):
-        yield self.write_register(REG_ST_TRANS_LEN, data)
+    async def set_state_transition_length(self, data):
+        await self.write_register(REG_ST_TRANS_LEN, data)
 
 
     # Set an entire Register
-    @cocotb.coroutine
-    def set_state_color(self, index, color):
+    async def set_state_color(self, index, color):
         data = 0x00
         data |= index << 24
         data |= color
-        yield self.write_register(REG_ST_CTRL, data)
+        await self.write_register(REG_ST_CTRL, data)
 
     # Set an entire Register
-    @cocotb.coroutine
-    def set_state_count(self, count):
-        yield self.write_register(REG_ST_COUNT, count)
+    async def set_state_count(self, count):
+        await self.write_register(REG_ST_COUNT, count)
 
     # Set Color
-    @cocotb.coroutine
-    def set_manual_color(self, color):
-        yield self.write_register(REG_RGB0_COLOR, color)
+    async def set_manual_color(self, color):
+        await self.write_register(REG_RGB0_COLOR, color)
 
 
 
 
 
 
-    # Get a bit within a register
-    @cocotb.coroutine
-    def is_test_mode(self):
-        bit_val = yield self.is_register_bit_set(REG_CONTROL, BIT_CTRL_EN)
+    # Read a single bit within a register
+    async def is_test_mode(self):
+        bit_val = await self.is_register_bit_set(REG_CONTROL, BIT_CTRL_EN)
         return bit_val
 
     # Set a range of data withing a register
-    @cocotb.coroutine
-    def set_control_test_range(self, data):
-        yield self.write_register_bit_range(REG_CONTROL, BIT_CTRL_TR_HIGH, BIT_CTRL_TR_LOW, data)
+    async def set_control_test_range(self, data):
+        await self.write_register_bit_range(REG_CONTROL, BIT_CTRL_TR_HIGH, BIT_CTRL_TR_LOW, data)
 
     # Get a range of data within a register
-    @cocotb.coroutine
-    def get_control_test_range(self, data):
-        data = yield self.read_register_bit_range(REG_CONTROL, BIT_CTRL_TR_HIGH, BIT_CTRL_TR_LOW, data)
+    async def get_control_test_range(self, data):
+        data = await self.read_register_bit_range(REG_CONTROL, BIT_CTRL_TR_HIGH, BIT_CTRL_TR_LOW, data)
         return data
-
-
-
-
-
 
