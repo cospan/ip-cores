@@ -48,40 +48,34 @@ reg [7:0] 	      test_id         = 0;
 always @ (*)      r_rst           = rst;
 
 //submodules
-NAME #(
+demo #(
   .ADDR_WIDTH       (ADDR_WIDTH     ),
   .INVERT_AXI_RESET (0              )
 ) dut (
   .i_axi_clk        (clk            ),
   .i_axi_rst        (r_rst          ),
 
-
   .i_awvalid        (aximl_awvalid  ),
   .i_awaddr         (aximl_awaddr   ),
   .o_awready        (aximl_awready  ),
-
 
   .i_wvalid         (aximl_wvalid   ),
   .o_wready         (aximl_wready   ),
   .i_wdata          (aximl_wdata    ),
   .i_wstrb          (aximl_wstrb    ),
 
-
   .o_bvalid         (aximl_bvalid   ),
   .i_bready         (aximl_bready   ),
   .o_bresp          (aximl_bresp    ),
-
 
   .i_arvalid        (aximl_arvalid  ),
   .o_arready        (aximl_arready  ),
   .i_araddr         (aximl_araddr   ),
 
-
   .o_rvalid         (aximl_rvalid   ),
   .i_rready         (aximl_rready   ),
   .o_rresp          (aximl_rresp    ),
   .o_rdata          (aximl_rdata    )
-
 );
 
 //asynchronus logic

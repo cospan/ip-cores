@@ -1,43 +1,15 @@
-import os
-import sys
-import time
-import cocotb
-#from cocotb.result import ReturnValue
-from cocotb.clock import Clock
 from cocotb.triggers import Timer
-from cocotb import logging
-#from cocotb_bus.drivers.amba import AXI4LiteMaster
 from cocotbext.axi import AxiLiteMaster, AxiLiteBus
 
 class Driver(object):
 
-    def __init__(self, dut, name, clock, reset, debug=False):
+    def __init__(self, dut, clock, reset, clk_period, name="AXIML", debug=False):
         self.debug = debug
         self.dut = dut
         self.clock = clock
-        self.reset = reset
-        self.axim = AxiLiteMaster(AxiLiteBus.from_prefix(dut, name), self.clock, self.reset)
+        self.clk_period = clk_period
+        self.axim = AxiLiteMaster(AxiLiteBus.from_prefix(dut, "aximl"), clock, reset)
         dut._log.debug ("Started")
-
-    async def write(self, address, data):
-        """write
-
-        Generic write command usd to write data to a Nysa image, this will be
-        overriden based on the communication method with the specific FPGA board
-
-        Args:
-            address (int): Address of the register/memory to read
-            data (array of unsigned bytes): Array of raw bytes to send to the
-                                           device
-            disable_auto_inc (bool): if true, auto increment feature will be disabled
-        Returns:
-            Nothing
-
-        Raises:
-            AssertionError: This function must be overriden by a board specific
-                implementation
-        """
-        await self.axim.write(address, data)
 
     async def read_register(self, address):
         """read_register
@@ -50,12 +22,9 @@ class Driver(object):
 
         Returns:
           (int): 32-bit unsigned register value
-
-        Raises:
-          NysaCommError: Error in communication
         """
-        d = await self.axim.read_dword(address)
-        return d
+        data = await self.axim.read(address, 4)
+        return int.from_bytes(data.data, byteorder="little")
 
     async def write_register(self, address, value):
         """write_register
@@ -68,11 +37,8 @@ class Driver(object):
 
         Returns:
           Nothing
-
-        Raises:
-          NysaCommError: Error in communication
         """
-        await self.axim.write_dword(address, value)
+        await self.axim.write(address, value.to_bytes(4, byteorder="little"))
 
     async def enable_register_bit(self, address, bit, enable):
         """enable_register_bit
@@ -86,9 +52,6 @@ class Driver(object):
 
         Returns:
           Nothing
-
-        Raises:
-          NysaCommError: Error in communication
         """
         if enable:
             await self.set_register_bit(address, bit)
@@ -106,9 +69,6 @@ class Driver(object):
 
         Returns:
           Nothing
-
-        Raises:
-          NysaCommError: Error in communication
         """
         register = await self.read_register(address)
         bit_mask =  1 << bit
@@ -126,9 +86,6 @@ class Driver(object):
 
         Returns:
           Nothing
-
-        Raises:
-          NysaCommError: Error in communication
         """
         register = await self.read_register(address)
         bit_mask =  1 << bit
@@ -148,9 +105,6 @@ class Driver(object):
           (boolean):
             True: bit is set
             False: bit is not set
-
-        Raises:
-          NysaCommError
         """
         register = await self.read_register(address)
         bit_mask =  1 << bit
@@ -173,9 +127,6 @@ class Driver(object):
 
         Returns:
             Nothing
-
-        Raises:
-            NysaCommError
         """
         reg = self.read_register(address)
         bitmask = (((1 << (high_bit + 1))) - (1 << low_bit))
@@ -199,9 +150,6 @@ class Driver(object):
         Returns (unsigned integer):
             Value within the bitfield
 
-        Raises:
-            NysaCommError
-
         """
 
         value = await self.read_register(address)
@@ -209,4 +157,7 @@ class Driver(object):
         value = value & bitmask
         value = value >> low_bit
         return value
+
+    async def sleep(self, clock_count):
+        await Timer(clock_count * self.clk_period)
 

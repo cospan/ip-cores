@@ -5,7 +5,8 @@ __author__ = "<your@email.here>"
 from axi_driver import Driver
 
 REG_CONTROL             = 0  << 2
-REG_VERSION             = 1  << 2
+REG_DEMO                = 1  << 2
+REG_VERSION             = 2  << 2
 
 #Set/Clear a bit
 BIT_CTRL_TEST           = 0
@@ -14,9 +15,9 @@ BIT_CTRL_TEST           = 0
 BIT_CTRL_TR_HIGH        = 15
 BIT_CTRL_TR_LOW         = 8
 
-class NAMEDriver (Driver):
+class DemoDriver (Driver):
     def __init__(self, dut, clock, reset, clk_period, name="aximl", debug = False):
-        super(NAMEDriver, self).__init__(dut, clock, reset, clk_period, name, debug=debug)
+        super(DemoDriver, self).__init__(dut, clock, reset, clk_period, name, debug=debug)
 
     def __del__(self):
         pass
@@ -34,7 +35,16 @@ class NAMEDriver (Driver):
         data = await self.read_register(REG_CONTROL)
         return data
 
-    # Demonstrate enabling an individual bit within a register
+    # Set an entire Register
+    async def set_demo(self, data):
+        await self.write_register(REG_DEMO, data)
+
+    # Get Entire Register
+    async def get_demo(self):
+        data = await self.read_register(REG_DEMO)
+        return data
+
+    # Set a bit within a register
     async def enable_test_mode(self, enable):
         await self.enable_register_bit(REG_CONTROL, BIT_CTRL_TEST, enable)
 
@@ -51,4 +61,9 @@ class NAMEDriver (Driver):
     async def get_control_test_range(self, data):
         data = await self.read_register_bit_range(REG_CONTROL, BIT_CTRL_TR_HIGH, BIT_CTRL_TR_LOW, data)
         return data
+
+
+
+
+
 

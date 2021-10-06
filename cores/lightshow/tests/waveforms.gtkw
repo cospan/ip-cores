@@ -1,0 +1,244 @@
+[*]
+[*] GTKWave Analyzer v3.3.103 (w)1999-2019 BSI
+[*] Sun Sep  5 18:02:04 2021
+[*]
+[dumpfile] "/home/cospan/Projects/ip-cores/cores/lightshow/tests/design.vcd"
+[dumpfile_mtime] "Sun Sep  5 18:01:45 2021"
+[dumpfile_size] 3703444
+[savefile] "/home/cospan/Projects/ip-cores/cores/lightshow/tests/waveforms.gtkw"
+[timestart] 0
+[size] 1920 1137
+[pos] -1 -1
+*-17.554081 629200 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+[treeopen] tb_axi_lite_slave.
+[treeopen] tb_axi_lite_slave.dut.
+[sst_width] 437
+[signals_width] 390
+[sst_expanded] 1
+[sst_vpaned_height] 341
+@8
+tb_axi_lite_slave.clk
+tb_axi_lite_slave.rst
+@200
+-
+@2
+tb_axi_lite_slave.test_id[7:0]
+@200
+-
+@c00200
+-AXI Signals
+@800200
+-WRITE_CMD_ADDR
+@2
+tb_axi_lite_slave.AXIML_AWADDR[31:0]
+@8
+tb_axi_lite_slave.AXIML_AWREADY
+tb_axi_lite_slave.AXIML_AWVALID
+@1000200
+-WRITE_CMD_ADDR
+@800200
+-WRITE_DATA
+@2
+tb_axi_lite_slave.AXIML_WDATA[31:0]
+@8
+tb_axi_lite_slave.AXIML_WREADY
+@2
+tb_axi_lite_slave.AXIML_WSTRB[3:0]
+@8
+tb_axi_lite_slave.AXIML_WVALID
+@1000200
+-WRITE_DATA
+@800200
+-WRITE_RSP
+@8
+tb_axi_lite_slave.AXIML_BREADY
+tb_axi_lite_slave.AXIML_BRESP[1:0]
+tb_axi_lite_slave.AXIML_BVALID
+@1000200
+-WRITE_RSP
+@c00200
+-READ_CMD_ADDR
+@2
+tb_axi_lite_slave.AXIML_ARADDR[31:0]
+@8
+tb_axi_lite_slave.AXIML_ARREADY
+tb_axi_lite_slave.AXIML_ARVALID
+@1401200
+-READ_CMD_ADDR
+@800200
+-READ_DATA
+@2
+tb_axi_lite_slave.AXIML_RDATA[31:0]
+@8
+tb_axi_lite_slave.AXIML_RREADY
+tb_axi_lite_slave.AXIML_RRESP[1:0]
+tb_axi_lite_slave.AXIML_RVALID
+@1000200
+-READ_DATA
+@1401200
+-AXI Signals
+@200
+-
+@800200
+-DUT
+-HOST_2_CORE
+@8
+tb_axi_lite_slave.dut.w_reg_in_rdy
+@2
+tb_axi_lite_slave.dut.w_reg_address[31:0]
+tb_axi_lite_slave.dut.w_reg_in_data[31:0]
+@8
+tb_axi_lite_slave.dut.r_reg_invalid_addr
+@1000200
+-HOST_2_CORE
+@200
+-
+@800200
+-CORE_2_HOST
+@8
+tb_axi_lite_slave.dut.w_reg_out_req
+@2
+tb_axi_lite_slave.dut.w_reg_address[31:0]
+tb_axi_lite_slave.dut.r_reg_out_data[31:0]
+@8
+tb_axi_lite_slave.dut.r_reg_invalid_addr
+@1000200
+-CORE_2_HOST
+@200
+-
+@1000200
+-DUT
+@200
+-
+@800200
+-RGB Controller
+@28
+tb_axi_lite_slave.dut.rgb0_c.o_blue
+tb_axi_lite_slave.dut.rgb0_c.o_green
+tb_axi_lite_slave.dut.rgb0_c.o_red
+@200
+-
+-
+-
+@28
+tb_axi_lite_slave.dut.rgb0_c.i_auto_state_stb
+@22
+tb_axi_lite_slave.dut.rgb0_c.i_auto_state_index[7:0]
+tb_axi_lite_slave.dut.rgb0_c.i_auto_state_count[7:0]
+@200
+-
+@28
+tb_axi_lite_slave.dut.rgb0_c.i_en
+tb_axi_lite_slave.dut.rgb0_c.i_auto
+@200
+-
+-
+@800200
+-Breather
+@2022
+^1 /home/cospan/Projects/ip-cores/cores/lightshow/tests/rgb_control_state.txt
+tb_axi_lite_slave.dut.rgb0_c.state[3:0]
+@28
+tb_axi_lite_slave.dut.rgb0_c.w_pwm_cycle
+@22
+tb_axi_lite_slave.dut.rgb0_c.r_curr_index[3:0]
+@200
+-
+@22
+tb_axi_lite_slave.dut.rgb0_c.w_debug_state0_color[23:0]
+tb_axi_lite_slave.dut.rgb0_c.w_debug_state1_color[23:0]
+tb_axi_lite_slave.dut.rgb0_c.w_debug_state2_color[23:0]
+tb_axi_lite_slave.dut.rgb0_c.w_debug_state3_color[23:0]
+@200
+-
+-
+@22
+tb_axi_lite_slave.dut.rgb0_c.w_trans_count[15:0]
+tb_axi_lite_slave.dut.rgb0_c.i_trans_shift[15:0]
+tb_axi_lite_slave.dut.rgb0_c.w_trans_shift[4:0]
+tb_axi_lite_slave.dut.rgb0_c.r_trans_shift[4:0]
+@200
+-
+@28
+tb_axi_lite_slave.dut.rgb0_c.r_trans_up[2:0]
+@200
+-
+@22
+tb_axi_lite_slave.dut.rgb0_c.w_trans_count[15:0]
+tb_axi_lite_slave.dut.rgb0_c.r_trans_shift[4:0]
+tb_axi_lite_slave.dut.rgb0_c.w_trans_shift[4:0]
+@200
+-
+@22
+tb_axi_lite_slave.dut.rgb0_c.w_debug_color_state_channel_shift_red[23:0]
+tb_axi_lite_slave.dut.rgb0_c.w_debug_color_state_channel_shift_green[23:0]
+tb_axi_lite_slave.dut.rgb0_c.w_debug_color_state_channel_shift_blue[23:0]
+@200
+-
+@22
+tb_axi_lite_slave.dut.rgb0_c.w_debug_color_state_channel_red[7:0]
+tb_axi_lite_slave.dut.rgb0_c.w_debug_color_state_channel_green[7:0]
+tb_axi_lite_slave.dut.rgb0_c.w_debug_color_state_channel_blue[7:0]
+@200
+-
+@22
+tb_axi_lite_slave.dut.rgb0_c.w_debug_auto_working_color_red[23:0]
+tb_axi_lite_slave.dut.rgb0_c.w_debug_auto_working_color_green[23:0]
+tb_axi_lite_slave.dut.rgb0_c.w_debug_auto_working_color_blue[23:0]
+@200
+-
+@22
+tb_axi_lite_slave.dut.rgb0_c.w_debug_auto_delta_color_red[23:0]
+tb_axi_lite_slave.dut.rgb0_c.w_debug_auto_delta_color_green[23:0]
+tb_axi_lite_slave.dut.rgb0_c.w_debug_auto_delta_color_blue[23:0]
+@200
+-
+@22
+tb_axi_lite_slave.dut.rgb0_c.w_debug_auto_color_red[7:0]
+tb_axi_lite_slave.dut.rgb0_c.w_debug_auto_color_green[7:0]
+tb_axi_lite_slave.dut.rgb0_c.w_debug_auto_color_blue[7:0]
+@200
+-
+@22
+tb_axi_lite_slave.dut.rgb0_c.w_debug_pwm_blue_init[7:0]
+tb_axi_lite_slave.dut.rgb0_c.w_debug_pwm_green_init[7:0]
+tb_axi_lite_slave.dut.rgb0_c.w_debug_pwm_red_init[7:0]
+@1000200
+-Breather
+@200
+-
+@800200
+-PWM Controller
+@24
+tb_axi_lite_slave.dut.rgb0_c.i_pwm_length[15:0]
+@28
+tb_axi_lite_slave.dut.rgb0_c.r_pwm_clk_edge
+@22
+tb_axi_lite_slave.dut.rgb0_c.r_pwm_count[15:0]
+tb_axi_lite_slave.dut.rgb0_c.r_pwm_index[7:0]
+tb_axi_lite_slave.dut.rgb0_c.r_clk_div_count[31:0]
+tb_axi_lite_slave.dut.rgb0_c.w_debug_pwm_step[31:0]
+@200
+-
+@22
+tb_axi_lite_slave.dut.rgb0_c.i_rgb_manual[23:0]
+tb_axi_lite_slave.dut.rgb0_c.w_debug_red_color[8:0]
+tb_axi_lite_slave.dut.rgb0_c.w_debug_green_color[8:0]
+tb_axi_lite_slave.dut.rgb0_c.w_debug_blue_color[8:0]
+@1000200
+-PWM Controller
+@200
+-
+@1000200
+-RGB Controller
+@200
+-
+-
+-
+-
+-
+-
+-
+-
+[pattern_trace] 1
+[pattern_trace] 0

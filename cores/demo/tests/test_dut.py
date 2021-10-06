@@ -1,12 +1,16 @@
 import os
+import sys
 import cocotb
 import logging
+from cocotb.result import TestFailure
 from cocotb.clock import Clock
+import time
+from array import array as Array
 from cocotb.triggers import Timer
 from cocotb.triggers import RisingEdge
 from cocotb.triggers import FallingEdge
 
-from NAME_driver import NAMEDriver
+from demo_driver import DemoDriver
 
 CLK_PERIOD = 10
 
@@ -36,20 +40,17 @@ async def reset_dut(dut):
 async def test_read_version(dut):
     """
     Description:
-        Read Back the version register using the AXI interface
-        Verify that the value read back using the AXI interface
-        matches the value that was read back directly
+        Read Back the version
 
     Test ID: 0
 
     Expected Results:
-        The value read using the AXI interface is the same as the value
-        within the version register
+        Read from the version register
     """
     dut._log.setLevel(logging.WARNING)
-    dut.test_id <= 0
     setup_dut(dut)
-    driver = NAMEDriver(dut, dut.clk, dut.rst, CLK_PERIOD, name="aximl", debug=False)
+    driver = DemoDriver(dut, dut.clk, dut.rst, CLK_PERIOD, False)
+    dut.test_id <= 0
     await reset_dut(dut)
 
     # Read the version
@@ -66,21 +67,16 @@ async def test_read_version(dut):
 async def test_write_control(dut):
     """
     Description:
-        Write a value into the control register using AXI
-        Read the value of the control register back directly
-        Verify that the value written using AXI matches the value
-            that was injected
+        Write the entire control register
 
     Test ID: 1
 
     Expected Results:
-        The value in the control register is the same as the value
-        written using the AXI interface
+        Read from the version register
     """
-    dut._log.setLevel(logging.WARNING)
-    dut.test_id <= 1
     setup_dut(dut)
-    driver = NAMEDriver(dut, dut.clk, dut.rst, CLK_PERIOD, name="aximl", debug=False)
+    driver = DemoDriver(dut, dut.clk, dut.rst, CLK_PERIOD, False)
+    dut.test_id <= 1
     await reset_dut(dut)
 
     my_control = 0x01234567
@@ -95,20 +91,16 @@ async def test_write_control(dut):
 async def test_read_control(dut):
     """
     Description:
-        Inject a value into the control register directly
-        Use the AXI interface to read the value of the control register
-        Verify the value that was read using AXI is the same as the
-            value injected
+        Read the entire control register
 
     Test ID: 2
 
     Expected Results:
-        The value read using AXI interface is the same as the value injected
+        Read from the version register
     """
-    dut._log.setLevel(logging.WARNING)
-    dut.test_id <= 2
     setup_dut(dut)
-    driver = NAMEDriver(dut, dut.clk, dut.rst, CLK_PERIOD, name="aximl", debug=False)
+    driver = DemoDriver(dut, dut.clk, dut.rst, CLK_PERIOD, False)
+    dut.test_id <= 2
     await reset_dut(dut)
 
     my_control = 0xFEDCBA98
@@ -118,4 +110,52 @@ async def test_read_control(dut):
     await Timer(CLK_PERIOD * 20)
     dut._log.info("Done")
     assert control == my_control
+
+@cocotb.test(skip = False)
+async def test_write_demo(dut):
+    """
+    Description:
+        Write the entire demo register
+
+    Test ID: 3
+
+    Expected Results:
+        TODO
+    """
+    setup_dut(dut)
+    driver = DemoDriver(dut, dut.clk, dut.rst, CLK_PERIOD, False)
+    dut.test_id <= 3
+    await reset_dut(dut)
+
+    my_demo = 0xABBA600D    # ABBA is a G00D band
+    await driver.set_demo(my_demo)
+    dut_demo = dut.dut.r_demo.value
+    dut._log.debug ("Demo: 0x%08X" % dut.dut.r_demo.value)
+    await Timer(CLK_PERIOD * 20)
+    dut._log.debug("Done")
+    assert dut_demo == my_demo
+
+@cocotb.test(skip = False)
+async def test_read_demo(dut):
+    """
+    Description:
+        Read the entire demo register
+
+    Test ID: 4
+
+    Expected Results:
+        TODO
+    """
+    setup_dut(dut)
+    driver = DemoDriver(dut, dut.clk, dut.rst, CLK_PERIOD, False)
+    dut.test_id <= 4
+    await reset_dut(dut)
+
+    my_demo = 0xFEEDACA7    # Always remember to FEED A CAT
+    dut.dut.r_demo.value = my_demo
+    value = await driver.get_demo()
+    dut._log.info ("Demo: 0x%08X" % value)
+    await Timer(CLK_PERIOD * 20)
+    dut._log.info("Done")
+    assert value == my_demo
 

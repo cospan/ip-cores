@@ -1,7 +1,25 @@
-
 /*
- Your license here
- */
+Distributed under the MIT license.
+Copyright (c) 2021 Dave McCoy (dave.mccoy@cospandesign.com)
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of
+this software and associated documentation files (the "Software"), to deal in
+the Software without restriction, including without limitation the rights to
+use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
+of the Software, and to permit persons to whom the Software is furnished to do
+so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+*/
 
 /*
  * Author:
@@ -21,7 +39,7 @@
 `define REVISION_RANGE            19:16
 `define VERSION_PAD_RANGE         15:0
 
-module NAME #(
+module demo #(
   parameter ADDR_WIDTH          = 16,
   parameter INVERT_AXI_RESET    = 1
 )(
@@ -58,11 +76,9 @@ module NAME #(
 //local parameters
 
 //Address Map
-//localparam  ADDR_0      = 0 << 2;
-//localparam  ADDR_1      = 1 << 2;
-
 localparam  REG_CONTROL      = 0 << 2;
-localparam  REG_VERSION      = 1 << 2;
+localparam  REG_DEMO         = 1 << 2;
+localparam  REG_VERSION      = 2 << 2;
 
 localparam  MAX_ADDR = REG_VERSION;
 
@@ -74,17 +90,18 @@ wire  [ADDR_WIDTH - 1: 0]   w_reg_address;
 reg                         r_reg_invalid_addr;
 
 wire                        w_reg_in_rdy;
-reg                         r_reg_in_ack;
+reg                         r_reg_in_ack_stb;
 wire  [31: 0]               w_reg_in_data;
 
 wire                        w_reg_out_req;
-reg                         r_reg_out_rdy;
+reg                         r_reg_out_rdy_stb;
 reg   [31: 0]               r_reg_out_data;
 
 
-//TEMP DATA, JUST FOR THE DEMO
+//User Registers
 reg   [31: 0]               r_control;
 wire  [31: 0]               w_version;
+reg   [31: 0]               r_demo;
 
 
 //submodules
@@ -126,12 +143,12 @@ axi_lite_slave #(
 
   //Ingress Path (From Master)
   .o_reg_in_rdy       (w_reg_in_rdy         ),
-  .i_reg_in_ack       (r_reg_in_ack         ),
+  .i_reg_in_ack_stb   (r_reg_in_ack_stb     ),
   .o_reg_in_data      (w_reg_in_data        ),
 
   //Egress Path (To Master)
   .o_reg_out_req      (w_reg_out_req        ),
-  .i_reg_out_rdy      (r_reg_out_rdy        ),
+  .i_reg_out_rdy_stb  (r_reg_out_rdy_stb    ),
   .i_reg_out_data     (r_reg_out_data       )
 );
 
@@ -144,11 +161,12 @@ assign w_version[`REVISION_RANGE]     = `REVISION;
 assign w_version[`VERSION_PAD_RANGE]  = 0;
 
 
+
 //synchronous logic
 always @ (posedge i_axi_clk) begin
-  //De-assert
-  r_reg_in_ack                            <=  0;
-  r_reg_out_rdy                           <=  0;
+  //De-assert Strobes
+  r_reg_in_ack_stb                        <=  0;
+  r_reg_out_rdy_stb                       <=  0;
   r_reg_invalid_addr                      <=  0;
 
   if (w_axi_rst) begin
@@ -156,6 +174,7 @@ always @ (posedge i_axi_clk) begin
 
     //Reset the temporary Data
     r_control                             <=  0;
+    r_demo                                <=  0;
   end
   else begin
 
@@ -163,27 +182,29 @@ always @ (posedge i_axi_clk) begin
       //From master
       case (w_reg_address)
         REG_CONTROL: begin
-          //$display("Incoming data on address: 0x%h: 0x%h", w_reg_address, w_reg_in_data);
           r_control                       <=  w_reg_in_data;
         end
+        REG_DEMO: begin
+          r_demo                          <=  w_reg_in_data;
+        end
         REG_VERSION: begin
-          //$display("Incoming data on address: 0x%h: 0x%h", w_reg_address, w_reg_in_data);
         end
         default: begin
           $display ("Unknown address: 0x%h", w_reg_address);
-          //Tell the host they wrote to an invalid address
           r_reg_invalid_addr              <= 1;
         end
       endcase
       //Tell the AXI Slave Control we're done with the data
-      r_reg_in_ack                        <= 1;
+      r_reg_in_ack_stb                    <= 1;
     end
     else if (w_reg_out_req) begin
       //To master
-      //$display("User is reading from address 0x%0h", w_reg_address);
       case (w_reg_address)
         REG_CONTROL: begin
           r_reg_out_data                  <= r_control;
+        end
+        REG_DEMO: begin
+          r_reg_out_data                  <= r_demo;
         end
         REG_VERSION: begin
           r_reg_out_data                  <= w_version;
@@ -195,7 +216,7 @@ always @ (posedge i_axi_clk) begin
         end
       endcase
       //Tell the AXI Slave to send back this packet
-      r_reg_out_rdy                       <= 1;
+      r_reg_out_rdy_stb                   <= 1;
     end
   end
 end
