@@ -1,10 +1,3 @@
-import os
-import sys
-import time
-import cocotb
-import logging
-#from cocotb.result import ReturnValue
-from cocotb.clock import Clock
 from cocotb.triggers import Timer
 from cocotbext.axi import AxiLiteMaster, AxiLiteBus
 
@@ -16,12 +9,6 @@ class Driver(object):
         self.clock = clock
         self.clk_period = clk_period
         self.axim = AxiLiteMaster(AxiLiteBus.from_prefix(dut, "aximl"), clock, reset)
-        #self.axim = AxiLiteMaster(AxiLiteBus.from_prefix(dut, "aximl"), dut.clk, dut.rst)
-        #self.axim.write_if.aw_channel.set_pause_generator(None);
-        #self.axim.write_if.w_channel.set_pause_generator(None);
-        #self.axim.write_if.b_channel.set_pause_generator(None);
-        #self.axim.read_if.ar_channel.set_pause_generator(None);
-        #self.axim.read_if.r_channel.set_pause_generator(None);
         dut._log.debug ("Started")
 
     async def read_register(self, address):
@@ -35,9 +22,6 @@ class Driver(object):
 
         Returns:
           (int): 32-bit unsigned register value
-
-        Raises:
-          NysaCommError: Error in communication
         """
         data = await self.axim.read(address, 4)
         return int.from_bytes(data.data, byteorder="little")
@@ -53,11 +37,7 @@ class Driver(object):
 
         Returns:
           Nothing
-
-        Raises:
-          NysaCommError: Error in communication
         """
-
         await self.axim.write(address, value.to_bytes(4, byteorder="little"))
 
     async def enable_register_bit(self, address, bit, enable):
@@ -72,9 +52,6 @@ class Driver(object):
 
         Returns:
           Nothing
-
-        Raises:
-          NysaCommError: Error in communication
         """
         if enable:
             await self.set_register_bit(address, bit)
@@ -92,9 +69,6 @@ class Driver(object):
 
         Returns:
           Nothing
-
-        Raises:
-          NysaCommError: Error in communication
         """
         register = await self.read_register(address)
         bit_mask =  1 << bit
@@ -112,9 +86,6 @@ class Driver(object):
 
         Returns:
           Nothing
-
-        Raises:
-          NysaCommError: Error in communication
         """
         register = await self.read_register(address)
         bit_mask =  1 << bit
@@ -134,9 +105,6 @@ class Driver(object):
           (boolean):
             True: bit is set
             False: bit is not set
-
-        Raises:
-          NysaCommError
         """
         register = await self.read_register(address)
         bit_mask =  1 << bit
@@ -159,9 +127,6 @@ class Driver(object):
 
         Returns:
             Nothing
-
-        Raises:
-            NysaCommError
         """
         reg = self.read_register(address)
         bitmask = (((1 << (high_bit + 1))) - (1 << low_bit))
@@ -185,16 +150,12 @@ class Driver(object):
         Returns (unsigned integer):
             Value within the bitfield
 
-        Raises:
-            NysaCommError
-
         """
 
         value = await self.read_register(address)
         bitmask = (((1 << (high_bit + 1))) - (1 << low_bit))
         value = value & bitmask
         value = value >> low_bit
-        #raise ReturnValue(value)
         return value
 
     async def sleep(self, clock_count):
