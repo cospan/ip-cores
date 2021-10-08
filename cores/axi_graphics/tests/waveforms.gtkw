@@ -1,15 +1,15 @@
 [*]
 [*] GTKWave Analyzer v3.3.103 (w)1999-2019 BSI
-[*] Wed Oct  6 14:43:44 2021
+[*] Wed Oct  6 17:42:16 2021
 [*]
 [dumpfile] "/home/cospan/Projects/ip-cores/cores/axi_graphics/tests/design.vcd"
-[dumpfile_mtime] "Wed Oct  6 14:22:03 2021"
-[dumpfile_size] 26097
+[dumpfile_mtime] "Wed Oct  6 17:15:06 2021"
+[dumpfile_size] 22248
 [savefile] "/home/cospan/Projects/ip-cores/cores/axi_graphics/tests/waveforms.gtkw"
-[timestart] 519
+[timestart] 734
 [size] 1920 1137
 [pos] -1 -1
-*-6.205360 655 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+*-3.646407 760 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
 [treeopen] tb_axi_lite_slave.
 [treeopen] tb_axi_lite_slave.dut.
 [sst_width] 416
@@ -23,7 +23,7 @@ tb_axi_lite_slave.rst
 -
 @22
 tb_axi_lite_slave.test_id[7:0]
-@201
+@200
 -
 @c00200
 -AXI Slave
@@ -56,16 +56,16 @@ tb_axi_lite_slave.aximl_wstrb[3:0]
 tb_axi_lite_slave.aximl_wvalid
 @1401200
 -AXI Slave
-@c00200
+@800200
 -AXI Stream
 @22
 tb_axi_lite_slave.axis_out_tdata[31:0]
 @28
-tb_axi_lite_slave.axis_out_tlast
-tb_axi_lite_slave.axis_out_tready
 tb_axi_lite_slave.axis_out_tuser
+tb_axi_lite_slave.axis_out_tready
 tb_axi_lite_slave.axis_out_tvalid
-@1401200
+tb_axi_lite_slave.axis_out_tlast
+@1000200
 -AXI Stream
 @200
 -
@@ -92,7 +92,14 @@ tb_axi_lite_slave.dut.r_ref_y0[11:0]
 tb_axi_lite_slave.dut.r_ref_y1[11:0]
 @200
 -
+@22
+tb_axi_lite_slave.dut.r_cm_index[3:0]
+tb_axi_lite_slave.dut.r_temp_width[11:0]
+@200
 -
+@23
+tb_axi_lite_slave.dut.x[11:0]
+@200
 -
 -
 [pattern_trace] 1
