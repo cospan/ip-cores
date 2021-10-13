@@ -92,13 +92,33 @@ set_property physical_name o_rdata [ipx::get_port_maps RDATA -of_objects [ipx::g
 
 # Associate the clock with the above bus
 ipx::associate_bus_interfaces -busif control -clock i_axi_clk [ipx::current_core]
-ipx::associate_bus_interfaces -clock i_axi_clk -reset i_axi_rst -remove [ipx::current_core]
+ipx::associate_bus_interfaces -clock i_axi_clk -reset i_axi_rst [ipx::current_core]
 ipx::remove_bus_parameter ASSOCIATED_RESET [ipx::get_bus_interfaces i_axi_clk -of_objects [ipx::current_core]]
 
 # Add an address map
 ipx::add_memory_map control [ipx::current_core]
 set_property slave_memory_map_ref control [ipx::get_bus_interfaces control -of_objects [ipx::current_core]]
 ipx::add_address_block main [ipx::get_memory_maps control -of_objects [ipx::current_core]]
+
+#Update the axi stream
+# (The auto generated core isn't right)
+ipx::remove_bus_interface o_axis_out [ipx::current_core]
+ipx::add_bus_interface video [ipx::current_core]
+set_property abstraction_type_vlnv xilinx.com:interface:axis_rtl:1.0 [ipx::get_bus_interfaces video -of_objects [ipx::current_core]]
+set_property bus_type_vlnv xilinx.com:interface:axis:1.0 [ipx::get_bus_interfaces video -of_objects [ipx::current_core]]
+set_property interface_mode master [ipx::get_bus_interfaces video -of_objects [ipx::current_core]]
+set_property display_name video [ipx::get_bus_interfaces video -of_objects [ipx::current_core]]
+ipx::add_port_map TUSER [ipx::get_bus_interfaces video -of_objects [ipx::current_core]]
+set_property physical_name o_axis_out_tuser [ipx::get_port_maps TUSER -of_objects [ipx::get_bus_interfaces video -of_objects [ipx::current_core]]]
+ipx::add_port_map TVALID [ipx::get_bus_interfaces video -of_objects [ipx::current_core]]
+set_property physical_name o_axis_out_tvalid [ipx::get_port_maps TVALID -of_objects [ipx::get_bus_interfaces video -of_objects [ipx::current_core]]]
+ipx::add_port_map TLAST [ipx::get_bus_interfaces video -of_objects [ipx::current_core]]
+set_property physical_name o_axis_out_tlast [ipx::get_port_maps TLAST -of_objects [ipx::get_bus_interfaces video -of_objects [ipx::current_core]]]
+ipx::add_port_map TDATA [ipx::get_bus_interfaces video -of_objects [ipx::current_core]]
+set_property physical_name o_axis_out_tdata [ipx::get_port_maps TDATA -of_objects [ipx::get_bus_interfaces video -of_objects [ipx::current_core]]]
+ipx::add_port_map TREADY [ipx::get_bus_interfaces video -of_objects [ipx::current_core]]
+set_property physical_name i_axis_out_tready [ipx::get_port_maps TREADY -of_objects [ipx::get_bus_interfaces video -of_objects [ipx::current_core]]]
+ipx::associate_bus_interfaces -busif video -clock i_axi_clk [ipx::current_core]
 
 
 #Generate the core
@@ -111,3 +131,5 @@ ipx::update_checksums [ipx::current_core]
 ipx::save_core [ipx::current_core]
 set_property  ip_repo_paths  $project_dir/$project_name [current_project]
 update_ip_catalog
+
+
