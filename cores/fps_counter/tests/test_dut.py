@@ -10,16 +10,13 @@ from axis_driver import AXISSource
 from fps_counter_driver import FPSCounterDriver
 
 CLK_PERIOD = 10
-TEST_CLOCK_PERIOD = 10
+TEST_CLOCK_PERIOD = 400
 
 MODULE_PATH = os.path.join(os.path.dirname(__file__), os.pardir, "hdl")
 MODULE_PATH = os.path.abspath(MODULE_PATH)
 
 
-#TODO: Write Test that verifies the nubmer of lines are correct
-#TODO: Write Test that verifies the number of pixels are correct
 #TODO: Write Test that verifies the frames per second is correct
-#TODO: Write Test that verifies the row lenth differens flag works correctly
 
 
 def setup_dut(dut):
@@ -94,9 +91,9 @@ async def test_boilerplate(dut):
     await reset_dut(dut)
     await axis_source.reset()
     await RisingEdge(dut.clk)
-    ARRAY_SIZE = 16
-    data = [range(ARRAY_SIZE)]
-    user = [0] * ARRAY_SIZE
+    LINE_LENGTH = 16
+    data = [range(LINE_LENGTH)]
+    user = [0] * LINE_LENGTH
     user[0] = 1
 
 
@@ -106,53 +103,150 @@ async def test_boilerplate(dut):
     await Timer(CLK_PERIOD * 20)
     SPACING = 20
     # Send a frame that is 4 rows, twice
-    for r in range(4):
-        await Timer(CLK_PERIOD * SPACING)
+    FRAME_COUNT = 4
+    LINE_COUNT = 6
+    for r in range(FRAME_COUNT):
         await axis_source.send_raw_data(data, user=user)
         await Timer(CLK_PERIOD * SPACING)
-        await axis_source.send_raw_data(data, user=None)
-        await Timer(CLK_PERIOD * SPACING)
-        await axis_source.send_raw_data(data, user=None)
-        await Timer(CLK_PERIOD * SPACING)
-        await axis_source.send_raw_data(data, user=None)
-
+        for i in range (LINE_COUNT - 1):
+            await axis_source.send_raw_data(data, user=None)
+            await Timer(CLK_PERIOD * SPACING)
 
     await Timer(CLK_PERIOD * 100)
 
+    frames = await driver.get_total_frames()
+    line_count = await driver.get_lines_per_frame()
+    line_length = await driver.get_pixels_per_row()
 
-    #my_control = 0x01234567
-    #await driver.set_control(my_control)
-    #dut_control = dut.dut.r_control.value
-    #dut._log.debug ("Control: 0x%08X" % dut.dut.r_control.value)
-    #await Timer(CLK_PERIOD * 20)
     dut._log.debug("Done")
-    #assert dut_control == my_control
+    assert FRAME_COUNT == frames
+    assert LINE_COUNT == line_count
+    assert LINE_LENGTH == line_length
 
-#@cocotb.test(skip = False)
-#async def test_read_control(dut):
-#    """
-#    Description:
-#        Inject a value into the control register directly
-#        Use the AXI interface to read the value of the control register
-#        Verify the value that was read using AXI is the same as the
-#            value injected
-#
-#    Test ID: 2
-#
-#    Expected Results:
-#        The value read using AXI interface is the same as the value injected
-#    """
-#    dut._log.setLevel(logging.WARNING)
-#    dut.test_id <= 2
-#    setup_dut(dut)
-#    driver = FPSCounterDriver(dut, dut.clk, dut.rst, CLK_PERIOD, name="aximl", debug=False)
-#    await reset_dut(dut)
-#
-#    my_control = 0xFEDCBA98
-#    #dut.dut.r_control.value = my_control
-#    #control = await driver.get_control()
-#    #dut._log.info ("Control: 0x%08X" % control)
-#    #await Timer(CLK_PERIOD * 20)
-#    dut._log.info("Done")
-#    #assert control == my_control
+
+@cocotb.test(skip = False)
+async def test_rows_not_equal(dut):
+    """
+    Description:
+        Write a value into the control register using AXI
+        Read the value of the control register back directly
+        Verify that the value written using AXI matches the value
+            that was injected
+
+    Test ID: 1
+
+    Expected Results:
+        The value in the control register is the same as the value
+        written using the AXI interface
+    """
+    dut._log.setLevel(logging.WARNING)
+    dut.test_id <= 2
+    setup_dut(dut)
+    driver = FPSCounterDriver(dut, dut.clk, dut.rst, CLK_PERIOD, name="aximl", debug=False)
+    axis_source = AXISSource(dut, "axis_in", dut.clk, dut.rst)
+    await reset_dut(dut)
+    await axis_source.reset()
+    await RisingEdge(dut.clk)
+    LINE_LENGTH = 16
+    data = [range(LINE_LENGTH)]
+    user = [0] * LINE_LENGTH
+    user[0] = 1
+
+    error_data = [range(LINE_LENGTH + 1)]
+    user = [0] * (LINE_LENGTH + 1)
+    user[0] = 1
+
+
+    await driver.set_clock_period(TEST_CLOCK_PERIOD)
+
+
+    await Timer(CLK_PERIOD * 20)
+    SPACING = 20
+    # Send a frame that is 4 rows, twice
+    LINE_COUNT = 6
+    for r in range(2):
+        await axis_source.send_raw_data(data, user=user)
+        await Timer(CLK_PERIOD * SPACING)
+        for i in range (LINE_COUNT - 1):
+            await axis_source.send_raw_data(data, user=None)
+            await Timer(CLK_PERIOD * SPACING)
+    rows_error = await driver.are_rows_equal()
+    assert not rows_error
+
+    for r in range(2):
+        await axis_source.send_raw_data(data, user=user)
+        await Timer(CLK_PERIOD * SPACING)
+        for i in range (LINE_COUNT - 1):
+            # Insert Row Error
+            await axis_source.send_raw_data(error_data, user=None)
+            await Timer(CLK_PERIOD * SPACING)
+
+
+    await Timer(CLK_PERIOD * 100)
+    # Should have an error now!
+    rows_error = await driver.are_rows_equal()
+    assert rows_error
+    dut._log.debug("Done")
+
+
+@cocotb.test(skip = False)
+async def test_lines_not_equal(dut):
+    """
+    Description:
+        Write a value into the control register using AXI
+        Read the value of the control register back directly
+        Verify that the value written using AXI matches the value
+            that was injected
+
+    Test ID: 1
+
+    Expected Results:
+        The value in the control register is the same as the value
+        written using the AXI interface
+    """
+    dut._log.setLevel(logging.WARNING)
+    dut.test_id <= 3
+    setup_dut(dut)
+    driver = FPSCounterDriver(dut, dut.clk, dut.rst, CLK_PERIOD, name="aximl", debug=False)
+    axis_source = AXISSource(dut, "axis_in", dut.clk, dut.rst)
+    await reset_dut(dut)
+    await axis_source.reset()
+    await RisingEdge(dut.clk)
+    LINE_LENGTH = 16
+    data = [range(LINE_LENGTH)]
+    user = [0] * LINE_LENGTH
+    user[0] = 1
+
+    await driver.set_clock_period(TEST_CLOCK_PERIOD)
+
+
+    await Timer(CLK_PERIOD * 20)
+    SPACING = 20
+    # Send a frame that is 4 rows, twice
+    LINE_COUNT = 6
+    for r in range(2):
+        await axis_source.send_raw_data(data, user=user)
+        await Timer(CLK_PERIOD * SPACING)
+        for i in range (LINE_COUNT - 1):
+            await axis_source.send_raw_data(data, user=None)
+            await Timer(CLK_PERIOD * SPACING)
+    lines_error = await driver.are_lines_equal()
+    assert not lines_error
+
+    LINE_COUNT = 3
+    for r in range(2):
+        await axis_source.send_raw_data(data, user=user)
+        await Timer(CLK_PERIOD * SPACING)
+        for i in range (LINE_COUNT - 1):
+            # Insert Row Error
+            await axis_source.send_raw_data(data, user=None)
+            await Timer(CLK_PERIOD * SPACING)
+
+
+    await Timer(CLK_PERIOD * 100)
+    # Should have an error now!
+    lines_error = await driver.are_lines_equal()
+    assert lines_error
+    dut._log.debug("Done")
+
 

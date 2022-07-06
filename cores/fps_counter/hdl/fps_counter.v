@@ -24,7 +24,8 @@
 `define BIT_CTRL_RESET_FRAME_COUNTS 0
 
 `define BIT_STS_FRAME_DETECTED      0
-`define BIT_STS_ROW_NOT_EQUAL       1
+`define BIT_STS_ROWS_NOT_EQUAL      1
+`define BIT_STS_LINES_NOT_EQUAL     2
 
 module fps_counter #(
   parameter ADDR_WIDTH          = 16,
@@ -102,14 +103,14 @@ localparam  REG_PIXELS_PER_ROW    = 6 << 2;
 
 
 
-localparam  REG_VERSION           = 6 << 2;
+localparam  REG_VERSION           = 7 << 2;
 localparam  MAX_ADDR = REG_VERSION;
 
 //registers/wires
 
 //User Interface
 wire                        w_axi_rst;
-wire                        w_axis_tuser_posedge;
+wire                        w_new_frame_stb;
 reg                         r_axis_tuser_prev;
 wire                        w_axis_rst;
 wire  [ADDR_WIDTH - 1: 0]   w_reg_address;
@@ -130,7 +131,6 @@ reg   [31: 0]               r_clock_period             = 0;
 reg   [31: 0]               r_counts_per_second        = 0;
 reg   [31: 0]               r_total_frame_count        = 0;
 reg   [31: 0]               r_frames_per_second        = 0;
-reg   [31: 0]               r_pixels_per_line          = 0;
 
 
 reg   [IMG_WIDTH_MAX - 1: 0]  r_image_width_count      = 0;
@@ -142,12 +142,13 @@ reg   [IMG_HEIGHT_MAX - 1: 0] r_image_height_count_out = 0;
 reg   [IMG_HEIGHT_MAX - 1: 0] r_fps_count              = 0;
 reg   [IMG_HEIGHT_MAX - 1: 0] r_fps_count_out          = 0;
 
-reg                           r_row_not_equal          = 0;
+reg                           r_rows_not_equal         = 0;
+reg                           r_lines_not_equal        = 0;
 reg                           r_new_frame              = 0;
 reg                           r_frame_detected         = 0;
 
-wire                          w_valid_pixel;
-wire                          w_valid_line;
+wire                          w_valid_pixel_stb;
+wire                          w_valid_line_stb;
 
 //submodules
 
@@ -213,9 +214,9 @@ assign o_axis_out_tlast               = i_axis_in_tlast;
 assign o_axis_out_tdata               = i_axis_in_tdata;
 
 
-assign w_axis_tuser_posedge           = i_axis_in_tuser & !r_axis_tuser_prev;
-assign w_valid_pixel                  = i_axis_in_tvalid & o_axis_in_tready;
-assign w_valid_line                   = i_axis_in_tvalid & o_axis_in_tready & i_axis_in_tlast;
+assign w_new_frame_stb                = i_axis_in_tuser & !r_axis_tuser_prev;
+assign w_valid_pixel_stb              = i_axis_in_tvalid & o_axis_in_tready;
+assign w_valid_line_stb               = i_axis_in_tvalid & o_axis_in_tready & i_axis_in_tlast;
 
 
 
@@ -238,7 +239,8 @@ always @ (posedge i_axi_clk) begin
     r_counts_per_second                   <= 0;
 
     r_axis_tuser_prev                     <= 0;
-    r_row_not_equal                       <= 0;
+    r_rows_not_equal                      <= 0;
+    r_lines_not_equal                     <= 0;
     r_frame_detected                      <= 0;
     r_total_frame_count                   <= 0;
     r_fps_count                           <= 0;
@@ -263,8 +265,9 @@ always @ (posedge i_axi_clk) begin
             r_total_frame_count           <=  0;
         end
         REG_STATUS: begin
-          r_frame_detected                <=  w_reg_in_data[`BIT_STS_FRAME_DETECTED] ? 1'b0 : 1'b1;
-          r_row_not_equal                 <=  w_reg_in_data[`BIT_STS_ROW_NOT_EQUAL]  ? 1'b0 : 1'b1;
+          r_frame_detected                <=  w_reg_in_data[`BIT_STS_FRAME_DETECTED]  ? 1'b0 : 1'b1;
+          r_rows_not_equal                <=  w_reg_in_data[`BIT_STS_ROWS_NOT_EQUAL]  ? 1'b0 : r_rows_not_equal;
+          r_lines_not_equal               <=  w_reg_in_data[`BIT_STS_LINES_NOT_EQUAL] ? 1'b0 : r_lines_not_equal;
         end
         REG_VERSION: begin
           //$display("Incoming data on address: 0x%h: 0x%h", w_reg_address, w_reg_in_data);
@@ -299,7 +302,8 @@ always @ (posedge i_axi_clk) begin
         REG_STATUS: begin
           r_reg_out_data                  <=  0;
           r_reg_out_data[`BIT_STS_FRAME_DETECTED]   <= r_frame_detected;
-          r_reg_out_data[`BIT_STS_ROW_NOT_EQUAL]    <= r_row_not_equal;
+          r_reg_out_data[`BIT_STS_ROWS_NOT_EQUAL]   <= r_rows_not_equal;
+          r_reg_out_data[`BIT_STS_LINES_NOT_EQUAL]  <= r_lines_not_equal;
         end
         REG_VERSION: begin
           r_reg_out_data                  <= w_version;
@@ -343,27 +347,29 @@ always @ (posedge i_axi_clk) begin
 
 
     //Reset Vertical Lines (new frame)
-    if (w_axis_tuser_posedge) begin
+    if (w_new_frame_stb) begin
       r_new_frame                         <=  1;
       r_frame_detected                    <=  1;
+      if ((r_image_height_count_out != 0) && (r_image_height_count_out != r_image_height_count))
+        r_lines_not_equal                 <=  1;
       r_image_height_count_out            <=  r_image_height_count;
       r_image_height_count                <=  0;
+      r_total_frame_count                 <=  r_total_frame_count + 1;
       r_fps_count                         <=  r_fps_count + 1;
     end
 
-
     //New pixel
-    if (w_valid_pixel) begin
+    if (w_valid_pixel_stb && ! w_valid_line_stb) begin
       r_image_width_count                 <=  r_image_width_count + 1;
     end
 
-    //New Line
-    if (w_valid_line) begin
+    //End of Line
+    if (w_valid_line_stb) begin
       //Check if the previous line matches with the current line
-      if ((r_image_width_count_out != 0) && (r_image_width_count_out != r_image_width_count))
-        r_row_not_equal                   <=  1;
+      if ((r_image_width_count_out != 0) && (r_image_width_count_out != (r_image_width_count + 1)))
+        r_rows_not_equal                  <=  1;
 
-      r_image_width_count_out             <=  r_image_width_count;
+      r_image_width_count_out             <=  r_image_width_count + 1;
       r_image_width_count                 <=  0;
 
       r_image_height_count                <=  r_image_height_count + 1;

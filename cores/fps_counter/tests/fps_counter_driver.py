@@ -12,13 +12,14 @@ REG_TOTAL_FRAMES        = 3 << 2;
 REG_FRAMES_PER_SECOND   = 4 << 2;
 REG_LINES_PER_FRAME     = 5 << 2;
 REG_PIXELS_PER_ROW      = 6 << 2;
-REG_VERSION             = 6 << 2;
+REG_VERSION             = 7 << 2;
 
 #Set/Clear a bit
-BIT_CTRL_RESET_FRAME_COUNTS  = 0
+BIT_CTRL_RESET_FRAME_COUNTS     = 0
 
-BIT_STS_FRAME_DETECTED       = 0
-BIT_STS_ROW_NOT_EQUAL        = 1
+BIT_STS_FRAME_DETECTED          = 0
+BIT_STS_ROWS_NOT_EQUAL          = 1
+BIT_STS_LINES_NOT_EQUAL         = 2
 
 class FPSCounterDriver (Driver):
     def __init__(self, dut, clock, reset, clk_period, name="aximl", debug = False):
@@ -31,9 +32,14 @@ class FPSCounterDriver (Driver):
         data = await self.read_register(REG_VERSION)
         return data
 
-    async def are_rows_equals(self):
-        data = await self.is_register_bit_set(REG_STATUS, BIT_STS_ROW_NOT_EQUAL)
-        await self.set_register_bit(REG_STATUS, BIT_STS_ROW_NOT_EQUAL)
+    async def are_rows_equal(self):
+        data = await self.is_register_bit_set(REG_STATUS, BIT_STS_ROWS_NOT_EQUAL)
+        await self.set_register_bit(REG_STATUS, BIT_STS_ROWS_NOT_EQUAL)
+        return data
+
+    async def are_lines_equal(self):
+        data = await self.is_register_bit_set(REG_STATUS, BIT_STS_LINES_NOT_EQUAL)
+        await self.set_register_bit(REG_STATUS, BIT_STS_LINES_NOT_EQUAL)
         return data
 
     async def is_frame_detected(self):
@@ -56,7 +62,7 @@ class FPSCounterDriver (Driver):
         return data
 
     async def get_lines_per_frame(self):
-        data = await self.read_register(REG_LINES_PER_SECOND)
+        data = await self.read_register(REG_LINES_PER_FRAME)
         return data
 
     async def get_pixels_per_row(self):
