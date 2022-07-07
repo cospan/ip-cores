@@ -41,9 +41,6 @@ input                               axis_in_tvalid,
 output                              axis_in_tready,
 input                               axis_in_tlast,
 input       [AXIS_DATA_WIDTH - 1:0] axis_in_tdata
-
-
-
 );
 
 
@@ -102,20 +99,13 @@ fps_counter #(
   //Input AXI Stream
   .i_axis_in_tuser  (axis_in_tuser     ),
   .i_axis_in_tvalid (axis_in_tvalid    ),
-  .o_axis_in_tready (axis_in_tready    ),
+  .i_axis_in_tready (axis_in_tready    ),
   .i_axis_in_tlast  (axis_in_tlast     ),
-  .i_axis_in_tdata  (axis_in_tdata     ),
-
-
-  //Output AXI Stream
-  //.o_axis_out_tuser (                  ),
-  //.o_axis_out_tvalid(                  ),
-  .i_axis_out_tready(1'b1              )
-  //.o_axis_out_tlast (                  ),
-  //.o_axis_out_tdata (                  )
+  .i_axis_in_tdata  (axis_in_tdata     )
 );
 
 //asynchronus logic
+assign axis_in_tready = 1'b1;
 //synchronous logic
 
 `ifndef VERILATOR // traced differently

@@ -75,19 +75,9 @@ module fps_counter #(
   //Input AXI Stream
   input  wire                             i_axis_in_tuser,
   input  wire                             i_axis_in_tvalid,
-  output wire                             o_axis_in_tready,
+  output wire                             i_axis_in_tready,
   input  wire                             i_axis_in_tlast,
-  input  wire   [AXIS_DATA_WIDTH - 1:0]   i_axis_in_tdata,
-
-
-  //Output AXI Stream
-  output wire                             o_axis_out_tuser,
-  output wire                             o_axis_out_tvalid,
-  input  wire                             i_axis_out_tready,
-  output wire                             o_axis_out_tlast,
-  output wire    [AXIS_DATA_WIDTH - 1:0]  o_axis_out_tdata
-
-
+  input  wire   [AXIS_DATA_WIDTH - 1:0]   i_axis_in_tdata
 );
 //local parameters
 
@@ -207,16 +197,9 @@ assign w_version[`REVISION_RANGE]     = `REVISION;
 assign w_version[`VERSION_PAD_RANGE]  = 0;
 
 
-assign o_axis_out_tuser               = i_axis_in_tuser;
-assign o_axis_out_tvalid              = i_axis_in_tvalid;
-assign o_axis_in_tready               = i_axis_out_tready;
-assign o_axis_out_tlast               = i_axis_in_tlast;
-assign o_axis_out_tdata               = i_axis_in_tdata;
-
-
 assign w_new_frame_stb                = i_axis_in_tuser & !r_axis_tuser_prev;
-assign w_valid_pixel_stb              = i_axis_in_tvalid & o_axis_in_tready;
-assign w_valid_line_stb               = i_axis_in_tvalid & o_axis_in_tready & i_axis_in_tlast;
+assign w_valid_pixel_stb              = i_axis_in_tvalid & i_axis_in_tready;
+assign w_valid_line_stb               = i_axis_in_tvalid & i_axis_in_tready & i_axis_in_tlast;
 
 
 
