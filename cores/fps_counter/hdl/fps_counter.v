@@ -75,7 +75,7 @@ module fps_counter #(
   //Input AXI Stream
   input  wire                             i_axis_in_tuser,
   input  wire                             i_axis_in_tvalid,
-  output wire                             i_axis_in_tready,
+  input  wire                             i_axis_in_tready,
   input  wire                             i_axis_in_tlast,
   input  wire   [AXIS_DATA_WIDTH - 1:0]   i_axis_in_tdata
 );
