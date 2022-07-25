@@ -9,8 +9,8 @@ from cocotb.triggers import FallingEdge
 from axis_driver import AXISSink
 from axi_graphics_driver import AXIGraphicsDriver
 
-#DEBUG=False
-DEBUG=True
+DEBUG=False
+#DEBUG=True
 DEFAULT_WIDTH=16
 
 CLK_PERIOD = 2
@@ -61,7 +61,7 @@ async def reset_dut(dut):
     dut.rst <= 0
     await Timer(CLK_PERIOD * 10)
 
-@cocotb.test(skip = False)
+@cocotb.test(skip = True)
 async def read_version(dut):
     """
     Description:
@@ -84,7 +84,7 @@ async def read_version(dut):
     dut._log.info("Done")
     await Timer(CLK_PERIOD * 20)
 
-@cocotb.test(skip = False)
+@cocotb.test(skip = True)
 async def test_colorbars(dut):
     """
     Description:
@@ -139,7 +139,7 @@ async def test_colorbars(dut):
     await driver.set_mode(5)
     await driver.enable(True)
     dut._log.info("Done")
-    await Timer(CLK_PERIOD * 200)
+    await Timer(CLK_PERIOD * 50)
 
 
 @cocotb.test(skip = False)
@@ -157,6 +157,7 @@ async def draw_square(dut):
     HEIGHT = 4
     refA = [1, 1]
     refB = [3, 2]
+    dut._log.setLevel(logging.WARNING)
 
     setup_dut(dut)
     driver = AXIGraphicsDriver(dut, dut.clk, dut.rst, CLK_PERIOD, name="aximl", debug=False)
