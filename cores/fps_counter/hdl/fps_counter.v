@@ -29,7 +29,7 @@
 
 module fps_counter #(
   parameter ADDR_WIDTH          = 16,
-  parameter CLOCK_PERIOD        = 100000000,
+  parameter CLOCK_FREQUENCY     = 100000000,
   parameter IMG_WIDTH_MAX       = 16,
   parameter IMG_HEIGHT_MAX      = 16,
 
@@ -94,7 +94,7 @@ module fps_counter #(
 //Address Map
 localparam  REG_CONTROL           = 0 << 2;
 localparam  REG_STATUS            = 1 << 2;
-localparam  REG_CLK_PERIOD        = 2 << 2;
+localparam  REG_CLK_FREQUENCY     = 2 << 2;
 localparam  REG_TOTAL_FRAMES      = 3 << 2;
 localparam  REG_FRAMES_PER_SECOND = 4 << 2;
 localparam  REG_LINES_PER_FRAME   = 5 << 2;
@@ -127,7 +127,7 @@ reg   [31: 0]               r_reg_out_data             = 0;
 
 //TEMP DATA, JUST FOR THE DEMO
 wire  [31: 0]               w_version;
-reg   [31: 0]               r_clock_period             = 0;
+reg   [31: 0]               r_clock_frequency          = 0;
 reg   [31: 0]               r_counts_per_second        = 0;
 reg   [31: 0]               r_total_frame_count        = 0;
 reg   [31: 0]               r_frames_per_second        = 0;
@@ -235,7 +235,7 @@ always @ (posedge i_axi_clk) begin
     r_reg_out_data                        <= 0;
 
     //Reset the temporary Data
-    r_clock_period                        <= CLOCK_PERIOD;
+    r_clock_frequency                     <= CLOCK_FREQUENCY;
     r_counts_per_second                   <= 0;
 
     r_axis_tuser_prev                     <= 0;
@@ -272,8 +272,8 @@ always @ (posedge i_axi_clk) begin
         REG_VERSION: begin
           //$display("Incoming data on address: 0x%h: 0x%h", w_reg_address, w_reg_in_data);
         end
-        REG_CLK_PERIOD: begin
-          r_clock_period                  <= w_reg_in_data;
+        REG_CLK_FREQUENCY: begin
+          r_clock_frequency               <= w_reg_in_data;
         end
         REG_TOTAL_FRAMES: begin
         end
@@ -308,8 +308,8 @@ always @ (posedge i_axi_clk) begin
         REG_VERSION: begin
           r_reg_out_data                  <= w_version;
         end
-        REG_CLK_PERIOD: begin
-          r_reg_out_data                  <= r_clock_period;
+        REG_CLK_FREQUENCY: begin
+          r_reg_out_data                  <= r_clock_frequency;
         end
         REG_TOTAL_FRAMES: begin
           r_reg_out_data                  <= r_total_frame_count;
@@ -323,7 +323,6 @@ always @ (posedge i_axi_clk) begin
         REG_PIXELS_PER_ROW: begin
           r_reg_out_data                  <= r_image_width_count_out;
         end
-
         default: begin
           //Unknown address
           r_reg_out_data                  <= 32'h00;
@@ -337,7 +336,7 @@ always @ (posedge i_axi_clk) begin
 
 
     //Frequency Counter
-    if (r_counts_per_second < r_clock_period)
+    if (r_counts_per_second < r_clock_frequency)
       r_counts_per_second                 <= r_counts_per_second + 1;
     else begin
       r_counts_per_second                 <= 0;

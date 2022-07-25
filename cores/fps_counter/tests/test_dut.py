@@ -9,8 +9,8 @@ from cocotb.triggers import FallingEdge
 from axis_driver import AXISSource
 from fps_counter_driver import FPSCounterDriver
 
-CLK_PERIOD = 10
-TEST_CLOCK_PERIOD = 400
+CLK_FREQUENCY = 10
+TEST_CLOCK_FREQUENCY = 400
 
 MODULE_PATH = os.path.join(os.path.dirname(__file__), os.pardir, "hdl")
 MODULE_PATH = os.path.abspath(MODULE_PATH)
@@ -22,21 +22,21 @@ MODULE_PATH = os.path.abspath(MODULE_PATH)
 def setup_dut(dut):
     #Fork any simulation specific co-routines
     #cocotb.fork(my_sim_coroutine(dut))
-    cocotb.fork(Clock(dut.clk, CLK_PERIOD).start())
+    cocotb.fork(Clock(dut.clk, CLK_FREQUENCY).start())
 
 # A simulation specific co-routine to stimulate the DUT in some way
 #       At the moment do nothing
 async def my_sim_coroutine(dut):
     while True:
-        await Timer(CLK_PERIOD * 20)
+        await Timer(CLK_FREQUENCY * 20)
         #Perform an operation ever 20 clock cycles
-        await Timer(CLK_PERIOD * 20)
+        await Timer(CLK_FREQUENCY * 20)
 
 async def reset_dut(dut):
     dut.rst <= 1
-    await Timer(CLK_PERIOD * 10)
+    await Timer(CLK_FREQUENCY * 10)
     dut.rst <= 0
-    await Timer(CLK_PERIOD * 10)
+    await Timer(CLK_FREQUENCY * 10)
 
 @cocotb.test(skip = False)
 async def test_read_version(dut):
@@ -55,7 +55,7 @@ async def test_read_version(dut):
     dut._log.setLevel(logging.WARNING)
     dut.test_id <= 0
     setup_dut(dut)
-    driver = FPSCounterDriver(dut, dut.clk, dut.rst, CLK_PERIOD, name="aximl", debug=False)
+    driver = FPSCounterDriver(dut, dut.clk, dut.rst, CLK_FREQUENCY, name="aximl", debug=False)
     await reset_dut(dut)
 
     # Read the version
@@ -64,7 +64,7 @@ async def test_read_version(dut):
     dut_version = dut.dut.w_version.value
     dut._log.debug ("Dut Version: %s" % dut_version)
     dut._log.debug ("Version: 0x%08X" % version)
-    await Timer(CLK_PERIOD * 20)
+    await Timer(CLK_FREQUENCY * 20)
     dut._log.debug("Done")
     assert dut_version == version
 
@@ -86,7 +86,7 @@ async def test_boilerplate(dut):
     dut._log.setLevel(logging.WARNING)
     dut.test_id <= 1
     setup_dut(dut)
-    driver = FPSCounterDriver(dut, dut.clk, dut.rst, CLK_PERIOD, name="aximl", debug=False)
+    driver = FPSCounterDriver(dut, dut.clk, dut.rst, CLK_FREQUENCY, name="aximl", debug=False)
     axis_source = AXISSource(dut, "axis_in", dut.clk, dut.rst)
     await reset_dut(dut)
     await axis_source.reset()
@@ -97,22 +97,22 @@ async def test_boilerplate(dut):
     user[0] = 1
 
 
-    await driver.set_clock_period(TEST_CLOCK_PERIOD)
+    await driver.set_clock_frequency(TEST_CLOCK_FREQUENCY)
 
 
-    await Timer(CLK_PERIOD * 20)
+    await Timer(CLK_FREQUENCY * 20)
     SPACING = 20
     # Send a frame that is 4 rows, twice
     FRAME_COUNT = 4
     LINE_COUNT = 6
     for r in range(FRAME_COUNT):
         await axis_source.send_raw_data(data, user=user)
-        await Timer(CLK_PERIOD * SPACING)
+        await Timer(CLK_FREQUENCY * SPACING)
         for i in range (LINE_COUNT - 1):
             await axis_source.send_raw_data(data, user=None)
-            await Timer(CLK_PERIOD * SPACING)
+            await Timer(CLK_FREQUENCY * SPACING)
 
-    await Timer(CLK_PERIOD * 100)
+    await Timer(CLK_FREQUENCY * 100)
 
     frames = await driver.get_total_frames()
     line_count = await driver.get_lines_per_frame()
@@ -142,7 +142,7 @@ async def test_rows_not_equal(dut):
     dut._log.setLevel(logging.WARNING)
     dut.test_id <= 2
     setup_dut(dut)
-    driver = FPSCounterDriver(dut, dut.clk, dut.rst, CLK_PERIOD, name="aximl", debug=False)
+    driver = FPSCounterDriver(dut, dut.clk, dut.rst, CLK_FREQUENCY, name="aximl", debug=False)
     axis_source = AXISSource(dut, "axis_in", dut.clk, dut.rst)
     await reset_dut(dut)
     await axis_source.reset()
@@ -157,32 +157,32 @@ async def test_rows_not_equal(dut):
     user[0] = 1
 
 
-    await driver.set_clock_period(TEST_CLOCK_PERIOD)
+    await driver.set_clock_frequency(TEST_CLOCK_FREQUENCY)
 
 
-    await Timer(CLK_PERIOD * 20)
+    await Timer(CLK_FREQUENCY * 20)
     SPACING = 20
     # Send a frame that is 4 rows, twice
     LINE_COUNT = 6
     for r in range(2):
         await axis_source.send_raw_data(data, user=user)
-        await Timer(CLK_PERIOD * SPACING)
+        await Timer(CLK_FREQUENCY * SPACING)
         for i in range (LINE_COUNT - 1):
             await axis_source.send_raw_data(data, user=None)
-            await Timer(CLK_PERIOD * SPACING)
+            await Timer(CLK_FREQUENCY * SPACING)
     rows_error = await driver.are_rows_equal()
     assert not rows_error
 
     for r in range(2):
         await axis_source.send_raw_data(data, user=user)
-        await Timer(CLK_PERIOD * SPACING)
+        await Timer(CLK_FREQUENCY * SPACING)
         for i in range (LINE_COUNT - 1):
             # Insert Row Error
             await axis_source.send_raw_data(error_data, user=None)
-            await Timer(CLK_PERIOD * SPACING)
+            await Timer(CLK_FREQUENCY * SPACING)
 
 
-    await Timer(CLK_PERIOD * 100)
+    await Timer(CLK_FREQUENCY * 100)
     # Should have an error now!
     rows_error = await driver.are_rows_equal()
     assert rows_error
@@ -207,7 +207,7 @@ async def test_lines_not_equal(dut):
     dut._log.setLevel(logging.WARNING)
     dut.test_id <= 3
     setup_dut(dut)
-    driver = FPSCounterDriver(dut, dut.clk, dut.rst, CLK_PERIOD, name="aximl", debug=False)
+    driver = FPSCounterDriver(dut, dut.clk, dut.rst, CLK_FREQUENCY, name="aximl", debug=False)
     axis_source = AXISSource(dut, "axis_in", dut.clk, dut.rst)
     await reset_dut(dut)
     await axis_source.reset()
@@ -217,33 +217,33 @@ async def test_lines_not_equal(dut):
     user = [0] * LINE_LENGTH
     user[0] = 1
 
-    await driver.set_clock_period(TEST_CLOCK_PERIOD)
+    await driver.set_clock_frequency(TEST_CLOCK_FREQUENCY)
 
 
-    await Timer(CLK_PERIOD * 20)
+    await Timer(CLK_FREQUENCY * 20)
     SPACING = 20
     # Send a frame that is 4 rows, twice
     LINE_COUNT = 6
     for r in range(2):
         await axis_source.send_raw_data(data, user=user)
-        await Timer(CLK_PERIOD * SPACING)
+        await Timer(CLK_FREQUENCY * SPACING)
         for i in range (LINE_COUNT - 1):
             await axis_source.send_raw_data(data, user=None)
-            await Timer(CLK_PERIOD * SPACING)
+            await Timer(CLK_FREQUENCY * SPACING)
     lines_error = await driver.are_lines_equal()
     assert not lines_error
 
     LINE_COUNT = 3
     for r in range(2):
         await axis_source.send_raw_data(data, user=user)
-        await Timer(CLK_PERIOD * SPACING)
+        await Timer(CLK_FREQUENCY * SPACING)
         for i in range (LINE_COUNT - 1):
             # Insert Row Error
             await axis_source.send_raw_data(data, user=None)
-            await Timer(CLK_PERIOD * SPACING)
+            await Timer(CLK_FREQUENCY * SPACING)
 
 
-    await Timer(CLK_PERIOD * 100)
+    await Timer(CLK_FREQUENCY * 100)
     # Should have an error now!
     lines_error = await driver.are_lines_equal()
     assert lines_error

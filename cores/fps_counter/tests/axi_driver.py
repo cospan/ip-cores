@@ -3,11 +3,11 @@ from cocotbext.axi import AxiLiteMaster, AxiLiteBus
 
 class Driver(object):
 
-    def __init__(self, dut, clock, reset, clk_period, name="AXIML", debug=False):
+    def __init__(self, dut, clock, reset, clk_frequency, name="AXIML", debug=False):
         self.debug = debug
         self.dut = dut
         self.clock = clock
-        self.clk_period = clk_period
+        self.clk_frequency = clk_frequency
         self.axim = AxiLiteMaster(AxiLiteBus.from_prefix(dut, "aximl"), clock, reset)
         dut._log.debug ("Started")
 
@@ -159,5 +159,5 @@ class Driver(object):
         return value
 
     async def sleep(self, clock_count):
-        await Timer(clock_count * self.clk_period)
+        await Timer(clock_count * self.clk_frequency)
 
