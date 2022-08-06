@@ -1,0 +1,211 @@
+[*]
+[*] GTKWave Analyzer v3.3.103 (w)1999-2019 BSI
+[*] Tue Aug  2 10:28:25 2022
+[*]
+[dumpfile] "/home/cospan/Projects/ip-cores/cores/axi_master_tester/tests/design.vcd"
+[dumpfile_mtime] "Tue Aug  2 02:41:42 2022"
+[dumpfile_size] 22480
+[savefile] "/home/cospan/Projects/ip-cores/cores/axi_master_tester/tests/waveforms.gtkw"
+[timestart] 0
+[size] 2560 1377
+[pos] -1 -1
+*-8.942001 4702 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+[treeopen] tb_axi_lite_slave.
+[treeopen] tb_axi_lite_slave.dut.
+[sst_width] 214
+[signals_width] 190
+[sst_expanded] 1
+[sst_vpaned_height] 425
+@8
+tb_axi_lite_slave.clk
+tb_axi_lite_slave.rst
+@200
+-
+@2
+tb_axi_lite_slave.test_id[7:0]
+@200
+-
+@c00200
+-AXI Signals
+@800200
+-WRITE_CMD_ADDR
+@2
+tb_axi_lite_slave.aximl_awaddr[31:0]
+@8
+tb_axi_lite_slave.aximl_awready
+tb_axi_lite_slave.aximl_awvalid
+@1000200
+-WRITE_CMD_ADDR
+@800200
+-WRITE_DATA
+@2
+tb_axi_lite_slave.aximl_wdata[31:0]
+@8
+tb_axi_lite_slave.aximl_wready
+@2
+tb_axi_lite_slave.aximl_wstrb[3:0]
+@8
+tb_axi_lite_slave.aximl_wvalid
+@1000200
+-WRITE_DATA
+@800200
+-WRITE_RSP
+@8
+tb_axi_lite_slave.aximl_bready
+tb_axi_lite_slave.aximl_bresp[1:0]
+tb_axi_lite_slave.aximl_bvalid
+@1000200
+-WRITE_RSP
+@c00200
+-READ_CMD_ADDR
+@2
+tb_axi_lite_slave.aximl_araddr[31:0]
+@8
+tb_axi_lite_slave.aximl_arready
+tb_axi_lite_slave.aximl_arvalid
+@1401200
+-READ_CMD_ADDR
+@800200
+-READ_DATA
+@2
+tb_axi_lite_slave.aximl_rdata[31:0]
+@8
+tb_axi_lite_slave.aximl_rready
+tb_axi_lite_slave.aximl_rresp[1:0]
+tb_axi_lite_slave.aximl_rvalid
+@1000200
+-READ_DATA
+@1401200
+-AXI Signals
+@200
+-
+@c00200
+-DUT
+@800200
+-HOST_2_CORE
+@8
+tb_axi_lite_slave.dut.w_reg_in_rdy
+@2
+tb_axi_lite_slave.dut.w_reg_address[31:0]
+tb_axi_lite_slave.dut.w_reg_in_data[31:0]
+@8
+tb_axi_lite_slave.dut.r_reg_invalid_addr
+@1000200
+-HOST_2_CORE
+@200
+-
+@800200
+-CORE_2_HOST
+@8
+tb_axi_lite_slave.dut.w_reg_out_req
+@2
+tb_axi_lite_slave.dut.w_reg_address[31:0]
+tb_axi_lite_slave.dut.r_reg_out_data[31:0]
+@8
+tb_axi_lite_slave.dut.r_reg_invalid_addr
+@1000200
+-CORE_2_HOST
+@200
+-
+@1401200
+-DUT
+@200
+-
+@800200
+-User Data Channels
+@200
+-
+-User Write Channel
+@22
+tb_axi_lite_slave.dut.usr_w_tdata[31:0]
+@28
+tb_axi_lite_slave.dut.usr_w_tlast
+tb_axi_lite_slave.dut.usr_w_tready
+@22
+tb_axi_lite_slave.dut.usr_w_tstrb[3:0]
+@28
+tb_axi_lite_slave.dut.usr_w_tvalid
+@200
+-
+-User Read Channel
+@22
+tb_axi_lite_slave.dut.usr_r_tdata[31:0]
+@28
+tb_axi_lite_slave.dut.usr_r_tlast
+tb_axi_lite_slave.dut.usr_r_tready
+tb_axi_lite_slave.dut.usr_r_tvalid
+@1000200
+-User Data Channels
+@200
+-
+@800200
+-AXI Master Bus
+@200
+-
+-AW Channel
+@22
+tb_axi_lite_slave.dut.axi_awaddr[7:0]
+@28
+tb_axi_lite_slave.dut.axi_awburst[1:0]
+@22
+tb_axi_lite_slave.dut.axi_awid[3:0]
+tb_axi_lite_slave.dut.axi_awlen[7:0]
+@28
+tb_axi_lite_slave.dut.axi_awready
+tb_axi_lite_slave.dut.axi_awsize[2:0]
+tb_axi_lite_slave.dut.axi_awvalid
+@200
+-
+-W Channel
+@22
+tb_axi_lite_slave.dut.axi_wdata[31:0]
+tb_axi_lite_slave.dut.axi_wid[3:0]
+@28
+tb_axi_lite_slave.dut.axi_wlast
+tb_axi_lite_slave.dut.axi_wready
+@22
+tb_axi_lite_slave.dut.axi_wstrb[3:0]
+@28
+tb_axi_lite_slave.dut.axi_wvalid
+@200
+-
+-B Channel
+@22
+tb_axi_lite_slave.dut.axi_bid[3:0]
+@28
+tb_axi_lite_slave.dut.axi_bready
+tb_axi_lite_slave.dut.axi_bresp[1:0]
+tb_axi_lite_slave.dut.axi_bvalid
+@200
+-
+-AR Channel
+@22
+tb_axi_lite_slave.dut.axi_araddr[7:0]
+@28
+tb_axi_lite_slave.dut.axi_arburst[1:0]
+@22
+tb_axi_lite_slave.dut.axi_arid[3:0]
+tb_axi_lite_slave.dut.axi_arlen[7:0]
+@28
+tb_axi_lite_slave.dut.axi_arready
+tb_axi_lite_slave.dut.axi_arsize[2:0]
+tb_axi_lite_slave.dut.axi_arvalid
+@200
+-
+-R Channel
+@23
+tb_axi_lite_slave.dut.axi_rdata[31:0]
+@22
+tb_axi_lite_slave.dut.axi_rid[3:0]
+@28
+tb_axi_lite_slave.dut.axi_rvalid
+tb_axi_lite_slave.dut.axi_rready
+tb_axi_lite_slave.dut.axi_rlast
+tb_axi_lite_slave.dut.axi_rresp[1:0]
+@1000200
+-AXI Master Bus
+@200
+-
+-
+[pattern_trace] 1
+[pattern_trace] 0
