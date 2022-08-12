@@ -9,7 +9,7 @@ from array import array as Array
 
 from axis_driver import AXISSource
 from axis_driver import AXISSink
-from cocotbext.axi import AxiBus, AxiSlave, MemoryRegion
+from cocotbext.axi import AxiBus, AxiSlave, MemoryRegion, AxiRam
 
 
 from axi_master_tester_driver import AXIMasterTesterDriver
@@ -91,9 +91,10 @@ async def test_axi_write(dut):
     axis_sink       = AXISSink  (dut, "usr_r",  dut.clk, dut.rst)
 
     # Setup the AXI Slave
-    axi_slave   = AxiSlave(AxiBus.from_prefix(dut, "axi_slave"), dut.clk, dut.rst, endian='big')
-    region = MemoryRegion(2 ** axi_slave.read_if.address_width)
-    axi_slave.target = region
+    #axi_slave   = AxiSlave(AxiBus.from_prefix(dut, "axi_slave"), dut.clk, dut.rst, endian='big')
+    #region = MemoryRegion(2 ** axi_slave.read_if.address_width)
+    #axi_slave.target = region
+    axi_slave = AxiRam(AxiBus.from_prefix(dut, "axi_slave"), dut.clk, dut.rst, size=2 ** 8)
 
     #test = [0x10, 0x15, 0x16, 0x17, 0x01, 0x02, 0x03, 0x04]
     #test = Array('B', (test))
@@ -130,7 +131,8 @@ async def test_axi_write(dut):
 
     await Timer(CLK_PERIOD * 100)
 
-    rdata = await axi_slave.target.read(ADDRESS, DATA_COUNT)
+    #rdata = await axi_slave.target.read(ADDRESS, DATA_COUNT)
+    rdata = axi_slave.read(ADDRESS, DATA_COUNT)
     print ("Read: %s" % str(rdata))
 
 
@@ -164,9 +166,11 @@ async def test_axi_read(dut):
     axis_sink       = AXISSink  (dut, "usr_r",  dut.clk, dut.rst)
 
     # Setup the AXI Slave
-    axi_slave   = AxiSlave(AxiBus.from_prefix(dut, "axi_slave"), dut.clk, dut.rst, endian='big')
-    region = MemoryRegion(2 ** axi_slave.read_if.address_width)
-    axi_slave.target = region
+    #axi_slave   = AxiSlave(AxiBus.from_prefix(dut, "axi_slave"), dut.clk, dut.rst, endian='big')
+    #region = MemoryRegion(2 ** axi_slave.read_if.address_width)
+    #axi_slave.target = region
+    #axi_slave = AxiRam(AxiBus.from_prefix(dut, "axi_slave"), dut.clk, dut.rst, size=2 ** axi_slave.read_if.address_width)
+    axi_slave = AxiRam(AxiBus.from_prefix(dut, "axi_slave"), dut.clk, dut.rst, size=2 ** 8)
 
 
     await reset_dut(dut)
@@ -189,7 +193,8 @@ async def test_axi_read(dut):
     #sdata = list(range(DATA_COUNT))
     #print ("SDATA: %s" % str(sdata))
     #sdata = Array('B', (sdata))
-    await region.write(ADDRESS, sdata)
+    #await region.write(ADDRESS, sdata)
+    axi_slave.write(ADDRESS, sdata)
     await Timer(CLK_PERIOD * 10)
     await driver.start_read_transaction(addr=ADDRESS, length=DATA_COUNT, user_id=0)
     await Timer(CLK_PERIOD * 10)
