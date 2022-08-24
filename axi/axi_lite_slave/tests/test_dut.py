@@ -27,9 +27,9 @@ async def my_sim_coroutine(dut):
         await Timer(CLK_PERIOD * 20)
 
 async def reset_dut(dut):
-    dut.rst <= 1
+    dut.rst.value = 1
     await Timer(CLK_PERIOD * 10)
-    dut.rst <= 0
+    dut.rst.value = 0
     await Timer(CLK_PERIOD * 10)
 
 @cocotb.test(skip = False)
@@ -47,7 +47,7 @@ async def test_read_version(dut):
         within the version register
     """
     dut._log.setLevel(logging.WARNING)
-    dut.test_id <= 0
+    dut.test_id.value = 0
     setup_dut(dut)
     driver = NAMEDriver(dut, dut.clk, dut.rst, CLK_PERIOD, name="aximl", debug=False)
     await reset_dut(dut)
@@ -78,7 +78,7 @@ async def test_write_control(dut):
         written using the AXI interface
     """
     dut._log.setLevel(logging.WARNING)
-    dut.test_id <= 1
+    dut.test_id.value = 1
     setup_dut(dut)
     driver = NAMEDriver(dut, dut.clk, dut.rst, CLK_PERIOD, name="aximl", debug=False)
     await reset_dut(dut)
@@ -106,7 +106,7 @@ async def test_read_control(dut):
         The value read using AXI interface is the same as the value injected
     """
     dut._log.setLevel(logging.WARNING)
-    dut.test_id <= 2
+    dut.test_id.value = 2
     setup_dut(dut)
     driver = NAMEDriver(dut, dut.clk, dut.rst, CLK_PERIOD, name="aximl", debug=False)
     await reset_dut(dut)
