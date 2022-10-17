@@ -33,11 +33,9 @@ module fps_counter #(
   parameter IMG_WIDTH_MAX       = 16,
   parameter IMG_HEIGHT_MAX      = 16,
 
-  parameter FPS_COUNT_MAX       = 16,
-
   parameter AXIS_DATA_WIDTH     = 8,
   parameter AXIS_KEEP_WIDTH     = (AXIS_DATA_WIDTH / 8),
-  parameter AXIS_DATA_USER_WIDTH= 0,
+  parameter AXIS_DATA_USER_WIDTH= 1,
 
   parameter INVERT_AXI_RESET    = 1
 )(
@@ -73,37 +71,41 @@ module fps_counter #(
 
 
   //Input AXI Stream
-  input  wire                             i_axis_in_tuser,
-  input  wire                             i_axis_in_tvalid,
-  output wire                             o_axis_in_tready,
-  input  wire                             i_axis_in_tlast,
-  input  wire   [AXIS_DATA_WIDTH - 1:0]   i_axis_in_tdata,
+  input  wire   [AXIS_DATA_USER_WIDTH - 1:0]  i_axis_in_tuser,
+  input  wire                                 i_axis_in_tvalid,
+  output wire                                 o_axis_in_tready,
+  input  wire                                 i_axis_in_tlast,
+  input  wire   [AXIS_DATA_WIDTH - 1:0]       i_axis_in_tdata,
 
 
   //Output AXI Stream
-  output wire                             o_axis_out_tuser,
-  output wire                             o_axis_out_tvalid,
-  input  wire                             i_axis_out_tready,
-  output wire                             o_axis_out_tlast,
-  output wire    [AXIS_DATA_WIDTH - 1:0]  o_axis_out_tdata
+  output wire   [AXIS_DATA_USER_WIDTH - 1:0]  o_axis_out_tuser,
+  output wire                                 o_axis_out_tvalid,
+  input  wire                                 i_axis_out_tready,
+  output wire                                 o_axis_out_tlast,
+  output wire    [AXIS_DATA_WIDTH - 1:0]      o_axis_out_tdata
 
 
 );
 //local parameters
 
 //Address Map
-localparam  REG_CONTROL           = 0 << 2;
-localparam  REG_STATUS            = 1 << 2;
-localparam  REG_CLK_FREQUENCY     = 2 << 2;
-localparam  REG_TOTAL_FRAMES      = 3 << 2;
-localparam  REG_FRAMES_PER_SECOND = 4 << 2;
-localparam  REG_LINES_PER_FRAME   = 5 << 2;
-localparam  REG_PIXELS_PER_ROW    = 6 << 2;
+localparam  REG_CONTROL             =  0 << 2;
+localparam  REG_STATUS              =  1 << 2;
+localparam  REG_CLK_PERIOD          =  2 << 2;
+localparam  REG_TOTAL_FRAMES        =  3 << 2;
+localparam  REG_FRAMES_PER_SECOND   =  4 << 2;
+localparam  REG_LINES_PER_FRAME     =  5 << 2;
+localparam  REG_PIXELS_PER_ROW      =  6 << 2;
+localparam  REG_MAX_LINES_PER_FRAME =  7 << 2;
+localparam  REG_MAX_PIXELS_PER_ROW  =  8 << 2;
+localparam  REG_INTERMEDIATE_ROWS   =  9 << 2;
+localparam  REG_INTERMEDIATE_HEIGHT = 10 << 2;
 
 
 
 
-localparam  REG_VERSION           = 7 << 2;
+localparam  REG_VERSION             = 11 << 2;
 localparam  MAX_ADDR = REG_VERSION;
 
 //registers/wires
@@ -141,6 +143,10 @@ reg   [IMG_HEIGHT_MAX - 1: 0] r_image_height_count_out = 0;
 
 reg   [IMG_HEIGHT_MAX - 1: 0] r_fps_count              = 0;
 reg   [IMG_HEIGHT_MAX - 1: 0] r_fps_count_out          = 0;
+
+
+reg   [IMG_WIDTH_MAX - 1: 0]  r_max_image_width_count_out  = 0;
+reg   [IMG_HEIGHT_MAX - 1: 0] r_max_image_height_count_out = 0;
 
 reg                           r_rows_not_equal         = 0;
 reg                           r_lines_not_equal        = 0;
@@ -214,7 +220,7 @@ assign o_axis_out_tlast               = i_axis_in_tlast;
 assign o_axis_out_tdata               = i_axis_in_tdata;
 
 
-assign w_new_frame_stb                = i_axis_in_tuser & !r_axis_tuser_prev;
+assign w_new_frame_stb                = i_axis_in_tuser[0] & !r_axis_tuser_prev;
 assign w_valid_pixel_stb              = i_axis_in_tvalid & o_axis_in_tready;
 assign w_valid_line_stb               = i_axis_in_tvalid & o_axis_in_tready & i_axis_in_tlast;
 
@@ -229,7 +235,7 @@ always @ (posedge i_axi_clk) begin
   r_reg_invalid_addr                      <= 0;
   r_new_frame                             <= 0;
 
-  r_axis_tuser_prev                       <= i_axis_in_tuser;
+  r_axis_tuser_prev                       <= i_axis_in_tuser[0];
 
   if (w_axi_rst) begin
     r_reg_out_data                        <= 0;
@@ -253,16 +259,30 @@ always @ (posedge i_axi_clk) begin
     r_image_height_count_out              <= 0;
 
 
+    r_max_image_width_count_out           <= 0;
+    r_max_image_height_count_out          <= 0;
+
+
   end
   else begin
+
+    if (r_image_width_count_out > r_max_image_width_count_out)
+      r_max_image_width_count_out       <=  r_image_width_count_out;
+
+    if (r_image_height_count_out > r_max_image_height_count_out)
+      r_max_image_height_count_out      <=  r_image_height_count_out;
+
 
     if (w_reg_in_rdy) begin
       //From master
       case (w_reg_address)
         REG_CONTROL: begin
           //$display("Incoming data on address: 0x%h: 0x%h", w_reg_address, w_reg_in_data);
-          if (w_reg_in_data[`BIT_CTRL_RESET_FRAME_COUNTS])
+          if (w_reg_in_data[`BIT_CTRL_RESET_FRAME_COUNTS]) begin
             r_total_frame_count           <=  0;
+            r_max_image_width_count_out   <=  0;
+            r_max_image_height_count_out  <=  0;
+          end
         end
         REG_STATUS: begin
           r_frame_detected                <=  w_reg_in_data[`BIT_STS_FRAME_DETECTED]  ? 1'b0 : 1'b1;
@@ -282,6 +302,14 @@ always @ (posedge i_axi_clk) begin
         REG_LINES_PER_FRAME: begin
         end
         REG_PIXELS_PER_ROW: begin
+        end
+        REG_MAX_LINES_PER_FRAME: begin
+        end
+        REG_MAX_PIXELS_PER_ROW: begin
+        end
+        REG_INTERMEDIATE_ROWS: begin
+        end
+        REG_INTERMEDIATE_HEIGHT: begin
         end
         default: begin
           $display ("Unknown address: 0x%h", w_reg_address);
@@ -323,6 +351,18 @@ always @ (posedge i_axi_clk) begin
         REG_PIXELS_PER_ROW: begin
           r_reg_out_data                  <= r_image_width_count_out;
         end
+        REG_MAX_LINES_PER_FRAME: begin
+          r_reg_out_data                  <= r_max_image_height_count_out;
+        end
+        REG_MAX_PIXELS_PER_ROW: begin
+          r_reg_out_data                  <= r_max_image_width_count_out;
+        end
+        REG_INTERMEDIATE_ROWS: begin
+          r_reg_out_data                  <= r_image_width_count;
+        end
+        REG_INTERMEDIATE_HEIGHT: begin
+          r_reg_out_data                  <= r_image_height_count;
+        end
         default: begin
           //Unknown address
           r_reg_out_data                  <= 32'h00;
@@ -332,8 +372,6 @@ always @ (posedge i_axi_clk) begin
       //Tell the AXI Slave to send back this packet
       r_reg_out_rdy                       <= 1;
     end
-
-
 
     //Frequency Counter
     if (r_counts_per_second < r_clock_frequency)
@@ -351,6 +389,8 @@ always @ (posedge i_axi_clk) begin
       r_frame_detected                    <=  1;
       if ((r_image_height_count_out != 0) && (r_image_height_count_out != r_image_height_count))
         r_lines_not_equal                 <=  1;
+
+
       r_image_height_count_out            <=  r_image_height_count;
       r_image_height_count                <=  0;
       r_total_frame_count                 <=  r_total_frame_count + 1;
@@ -368,10 +408,9 @@ always @ (posedge i_axi_clk) begin
       if ((r_image_width_count_out != 0) && (r_image_width_count_out != (r_image_width_count + 1)))
         r_rows_not_equal                  <=  1;
 
+      r_image_height_count                <=  r_image_height_count + 1;
       r_image_width_count_out             <=  r_image_width_count + 1;
       r_image_width_count                 <=  0;
-
-      r_image_height_count                <=  r_image_height_count + 1;
     end
 
   end
