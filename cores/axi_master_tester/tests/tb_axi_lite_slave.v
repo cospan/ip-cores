@@ -179,19 +179,19 @@ axi_master_tester #(
   .axi_awburst      (axi_slave_awburst    ),
   .axi_awvalid      (axi_slave_awvalid    ),
   .axi_awready      (axi_slave_awready    ),
-                              
+
   .axi_wdata        (axi_slave_wdata      ),
   .axi_wid          (axi_slave_wid        ),
   .axi_wstrb        (axi_slave_wstrb      ),
   .axi_wlast        (axi_slave_wlast      ),
   .axi_wvalid       (axi_slave_wvalid     ),
   .axi_wready       (axi_slave_wready     ),
-                              
+
   .axi_bresp        (axi_slave_bresp      ),
   .axi_bid          (axi_slave_bid        ),
   .axi_bvalid       (axi_slave_bvalid     ),
   .axi_bready       (axi_slave_bready     ),
-                              
+
   .axi_araddr       (axi_slave_araddr     ),
   .axi_arid         (axi_slave_arid       ),
   .axi_arlen        (axi_slave_arlen      ),
@@ -199,7 +199,7 @@ axi_master_tester #(
   .axi_arburst      (axi_slave_arburst    ),
   .axi_arvalid      (axi_slave_arvalid    ),
   .axi_arready      (axi_slave_arready    ),
-                              
+
   .axi_rdata        (axi_slave_rdata      ),
   .axi_rid          (axi_slave_rid        ),
   .axi_rlast        (axi_slave_rlast      ),

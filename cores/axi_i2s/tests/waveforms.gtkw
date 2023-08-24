@@ -1,0 +1,158 @@
+[*]
+[*] GTKWave Analyzer v3.3.103 (w)1999-2019 BSI
+[*] Fri Aug 26 11:34:45 2022
+[*]
+[dumpfile] "/home/cospan/Projects/ip-cores/cores/axi_i2s/tests/design.vcd"
+[dumpfile_mtime] "Thu Aug 25 17:22:22 2022"
+[dumpfile_size] 14140
+[savefile] "/home/cospan/Projects/ip-cores/cores/axi_i2s/tests/waveforms.gtkw"
+[timestart] 0
+[size] 1920 1137
+[pos] -1929 -33
+*-6.997493 438 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+[treeopen] tb_axi_lite_slave.
+[treeopen] tb_axi_lite_slave.dut.
+[treeopen] tb_axi_lite_slave.dut.audio_tx.
+[sst_width] 214
+[signals_width] 206
+[sst_expanded] 1
+[sst_vpaned_height] 341
+@8
+tb_axi_lite_slave.clk
+tb_axi_lite_slave.rst
+@200
+-
+@2
+tb_axi_lite_slave.test_id[7:0]
+@200
+-
+@c00200
+-AXI Signals
+@800200
+-WRITE_CMD_ADDR
+@2
+tb_axi_lite_slave.aximl_awaddr[31:0]
+@8
+tb_axi_lite_slave.aximl_awready
+tb_axi_lite_slave.aximl_awvalid
+@1000200
+-WRITE_CMD_ADDR
+@800200
+-WRITE_DATA
+@2
+tb_axi_lite_slave.aximl_wdata[31:0]
+@8
+tb_axi_lite_slave.aximl_wready
+@2
+tb_axi_lite_slave.aximl_wstrb[3:0]
+@8
+tb_axi_lite_slave.aximl_wvalid
+@1000200
+-WRITE_DATA
+@800200
+-WRITE_RSP
+@8
+tb_axi_lite_slave.aximl_bready
+tb_axi_lite_slave.aximl_bresp[1:0]
+tb_axi_lite_slave.aximl_bvalid
+@1000200
+-WRITE_RSP
+@c00200
+-READ_CMD_ADDR
+@2
+tb_axi_lite_slave.aximl_araddr[31:0]
+@8
+tb_axi_lite_slave.aximl_arready
+tb_axi_lite_slave.aximl_arvalid
+@1401200
+-READ_CMD_ADDR
+@800200
+-READ_DATA
+@2
+tb_axi_lite_slave.aximl_rdata[31:0]
+@8
+tb_axi_lite_slave.aximl_rready
+tb_axi_lite_slave.aximl_rresp[1:0]
+tb_axi_lite_slave.aximl_rvalid
+@1000200
+-READ_DATA
+@1401200
+-AXI Signals
+@200
+-
+@800200
+-DUT
+-HOST_2_CORE
+@8
+tb_axi_lite_slave.dut.w_reg_in_rdy
+@2
+tb_axi_lite_slave.dut.w_reg_address[31:0]
+tb_axi_lite_slave.dut.w_reg_in_data[31:0]
+@8
+tb_axi_lite_slave.dut.r_reg_invalid_addr
+@1000200
+-HOST_2_CORE
+@200
+-
+@800200
+-CORE_2_HOST
+@8
+tb_axi_lite_slave.dut.w_reg_out_req
+@2
+tb_axi_lite_slave.dut.w_reg_address[31:0]
+tb_axi_lite_slave.dut.r_reg_out_data[31:0]
+@8
+tb_axi_lite_slave.dut.r_reg_invalid_addr
+@1000200
+-CORE_2_HOST
+@200
+-
+@1000200
+-DUT
+@200
+-
+-
+-
+@28
+tb_axi_lite_slave.dut.axis_audio_clk
+tb_axi_lite_slave.dut.axis_audio_rst
+@22
+tb_axi_lite_slave.dut.axis_audio_tdata[31:0]
+tb_axi_lite_slave.dut.axis_audio_tid[3:0]
+@28
+tb_axi_lite_slave.dut.axis_audio_tlast
+tb_axi_lite_slave.dut.axis_audio_tready
+@29
+tb_axi_lite_slave.dut.axis_audio_tvalid
+@200
+-
+-
+@800200
+-I2S FIFO
+@28
+tb_axi_lite_slave.dut.audio_tx.f.i_w_clk
+@22
+tb_axi_lite_slave.dut.audio_tx.f.i_w_fifo_data[15:0]
+@28
+tb_axi_lite_slave.dut.audio_tx.f.i_w_fifo_stb
+tb_axi_lite_slave.dut.audio_tx.f.i_w_rst
+tb_axi_lite_slave.dut.audio_tx.f.o_w_fifo_full
+@200
+-
+@28
+tb_axi_lite_slave.dut.audio_tx.f.i_r_clk
+tb_axi_lite_slave.dut.audio_tx.f.i_r_rst
+tb_axi_lite_slave.dut.audio_tx.f.o_r_fifo_empty
+tb_axi_lite_slave.dut.audio_tx.f.i_r_fifo_stb
+@22
+tb_axi_lite_slave.dut.audio_tx.f.o_r_fifo_data[15:0]
+@200
+-
+@22
+tb_axi_lite_slave.dut.audio_tx.f.r_read_ptr[5:0]
+tb_axi_lite_slave.dut.audio_tx.f.read_ptr[5:0]
+tb_axi_lite_slave.dut.audio_tx.f.write_ptr[5:0]
+@1000200
+-I2S FIFO
+[pattern_trace] 1
+[pattern_trace] 0

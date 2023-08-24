@@ -78,6 +78,7 @@ module fps_counter #(
   output wire                             o_axis_in_tready,
   input  wire                             i_axis_in_tlast,
   input  wire   [AXIS_DATA_WIDTH - 1:0]   i_axis_in_tdata,
+  input  wire   [AXIS_KEEP_WIDTH - 1:0]   i_axis_in_tkeep,
 
 
   //Output AXI Stream
@@ -85,7 +86,8 @@ module fps_counter #(
   output wire                             o_axis_out_tvalid,
   input  wire                             i_axis_out_tready,
   output wire                             o_axis_out_tlast,
-  output wire    [AXIS_DATA_WIDTH - 1:0]  o_axis_out_tdata
+  output wire    [AXIS_DATA_WIDTH - 1:0]  o_axis_out_tdata,
+  output wire    [AXIS_KEEP_WIDTH - 1:0]  o_axis_out_tkeep
 
 
 );
@@ -212,6 +214,7 @@ assign o_axis_out_tvalid              = i_axis_in_tvalid;
 assign o_axis_in_tready               = i_axis_out_tready;
 assign o_axis_out_tlast               = i_axis_in_tlast;
 assign o_axis_out_tdata               = i_axis_in_tdata;
+assign o_axis_out_tkeep               = i_axis_in_tkeep;
 
 
 assign w_new_frame_stb                = i_axis_in_tuser & !r_axis_tuser_prev;

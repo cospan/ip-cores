@@ -6,6 +6,14 @@ from cocotb.triggers import Timer
 from cocotb.triggers import RisingEdge
 from cocotb.triggers import FallingEdge
 
+from array import array as Array
+
+from axis_driver import AXISSource
+from axis_driver import AXISSink
+from cocotbext.axi import AxiBus, AxiSlave, MemoryRegion, AxiRam
+
+
+
 from nes_driver import nesDriver
 
 CLK_PERIOD = 10
@@ -15,8 +23,8 @@ MODULE_PATH = os.path.abspath(MODULE_PATH)
 
 def setup_dut(dut):
     #Fork any simulation specific co-routines
-    #cocotb.fork(my_sim_coroutine(dut))
-    cocotb.fork(Clock(dut.clk, CLK_PERIOD).start())
+    #cocotb.start_soon(my_sim_coroutine(dut))
+    cocotb.start_soon(Clock(dut.clk, CLK_PERIOD).start())
 
 # A simulation specific co-routine to stimulate the DUT in some way
 #       At the moment do nothing

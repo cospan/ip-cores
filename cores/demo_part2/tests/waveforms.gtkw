@@ -1,0 +1,112 @@
+[*]
+[*] GTKWave Analyzer v3.3.103 (w)1999-2019 BSI
+[*] Fri Oct 22 17:56:56 2021
+[*]
+[dumpfile] "/home/cospan/Projects/ip-cores/cores/demo_part2/tests/design.vcd"
+[dumpfile_mtime] "Fri Oct 22 12:41:37 2021"
+[dumpfile_size] 8833
+[savefile] "/home/cospan/Projects/ip-cores/cores/demo_part2/tests/waveforms.gtkw"
+[timestart] 0
+[size] 1519 1029
+[pos] -1 -1
+*-9.125658 519 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+[treeopen] tb_axi_lite_slave.
+[treeopen] tb_axi_lite_slave.dut.
+[sst_width] 214
+[signals_width] 190
+[sst_expanded] 1
+[sst_vpaned_height] 302
+@8
+tb_axi_lite_slave.clk
+tb_axi_lite_slave.rst
+@200
+-
+@2
+tb_axi_lite_slave.test_id[7:0]
+@200
+-
+@800200
+-AXI Signals
+-WRITE_CMD_ADDR
+@28
+tb_axi_lite_slave.aximl_awvalid
+tb_axi_lite_slave.aximl_awready
+@22
+tb_axi_lite_slave.aximl_awaddr[31:0]
+@1000200
+-WRITE_CMD_ADDR
+@800200
+-WRITE_DATA
+@28
+tb_axi_lite_slave.aximl_wvalid
+tb_axi_lite_slave.aximl_wready
+@22
+tb_axi_lite_slave.aximl_wdata[31:0]
+tb_axi_lite_slave.aximl_wstrb[3:0]
+@1000200
+-WRITE_DATA
+@800200
+-WRITE_RSP
+@28
+tb_axi_lite_slave.aximl_bvalid
+tb_axi_lite_slave.aximl_bready
+tb_axi_lite_slave.aximl_bresp[1:0]
+@1000200
+-WRITE_RSP
+@800200
+-READ_CMD_ADDR
+@28
+tb_axi_lite_slave.aximl_arvalid
+tb_axi_lite_slave.aximl_arready
+@22
+tb_axi_lite_slave.aximl_araddr[31:0]
+@1000200
+-READ_CMD_ADDR
+@800200
+-READ_DATA
+@28
+tb_axi_lite_slave.aximl_rvalid
+@29
+tb_axi_lite_slave.aximl_rready
+@22
+tb_axi_lite_slave.aximl_rdata[31:0]
+@28
+tb_axi_lite_slave.aximl_rresp[1:0]
+@1000200
+-READ_DATA
+-AXI Signals
+@200
+-
+@800200
+-DUT
+-HOST_2_CORE
+@8
+tb_axi_lite_slave.dut.w_reg_in_rdy
+@2
+tb_axi_lite_slave.dut.w_reg_address[31:0]
+tb_axi_lite_slave.dut.w_reg_in_data[31:0]
+@8
+tb_axi_lite_slave.dut.r_reg_invalid_addr
+@1000200
+-HOST_2_CORE
+@200
+-
+@800200
+-CORE_2_HOST
+@8
+tb_axi_lite_slave.dut.w_reg_out_req
+@2
+tb_axi_lite_slave.dut.w_reg_address[31:0]
+tb_axi_lite_slave.dut.r_reg_out_data[31:0]
+@8
+tb_axi_lite_slave.dut.r_reg_invalid_addr
+@1000200
+-CORE_2_HOST
+@200
+-
+@2
+tb_axi_lite_slave.dut.r_control[31:0]
+@1000200
+-DUT
+[pattern_trace] 1
+[pattern_trace] 0

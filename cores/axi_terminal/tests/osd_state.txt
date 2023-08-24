@@ -1,0 +1,7 @@
+0 IDLE
+1 ?blue?PREPARE_LINE
+2 ?cyan?PROCESS_LINE
+3 ?deep pink?GET_CHAR
+4 ?gold?FONT_MEM_READ_DELAY
+5 ?lavender?PROCESS_CHAR_START
+6 ?maroon?PROCESS_CHAR

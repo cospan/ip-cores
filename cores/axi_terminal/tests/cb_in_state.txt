@@ -1,0 +1,13 @@
+0  IDLE                    
+1  PROCESS_NORMAL_CHAR     
+2  PROCESS_BACKSPACE_PREP  
+3  PROCESS_BACKSPACE       
+4  NOM_BLANKS_PREP1        
+5  NOM_BLANKS_PREP2        
+6  NOM_BLANKS              
+7  PROCESS_CARRIAGE_RETURN 
+8  PROCESS_TAB             
+9  CLEAR_BUFFER            
+10 CLEAR_LINE              
+
+

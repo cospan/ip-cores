@@ -21,15 +21,15 @@ MODULE_PATH = os.path.join(os.path.dirname(__file__), os.pardir, "hdl")
 MODULE_PATH = os.path.abspath(MODULE_PATH)
 
 def setup_dut(dut):
-    cocotb.fork(Clock(dut.clk, CLK_PERIOD).start())
-    cocotb.fork(Clock(dut.axis_clk, AXIS_CLK_PERIOD).start())
+    cocotb.start_soon(Clock(dut.clk, CLK_PERIOD).start())
+    cocotb.start_soon(Clock(dut.axis_clk, AXIS_CLK_PERIOD).start())
 
 async def reset_dut(dut):
-    dut.rst <= 1
-    dut.axis_rst <= 1
+    dut.rst.value =  1
+    dut.axis_rst.value =  1
     await Timer(CLK_PERIOD * AXIS_CLK_PERIOD * 2)
-    dut.rst <= 0
-    dut.axis_rst <= 0
+    dut.rst.value =  0
+    dut.axis_rst.value =  0
     await Timer(CLK_PERIOD * AXIS_CLK_PERIOD * 2)
 
 @cocotb.test(skip = False)
@@ -46,7 +46,7 @@ async def test_read_version(dut):
     dut._log.setLevel(logging.WARNING)
     setup_dut(dut)
     driver = DemoAXIStreamsDriver(dut, dut.clk, dut.rst, CLK_PERIOD, name="aximl", debug=False)
-    dut.test_id <= 0
+    dut.test_id.value =  0
     await reset_dut(dut)
 
     # Read the version
@@ -71,7 +71,7 @@ async def test_write_control(dut):
         Read from the version register
     """
     dut._log.setLevel(logging.WARNING)
-    dut.test_id <= 1
+    dut.test_id.value =  1
     setup_dut(dut)
     driver = DemoAXIStreamsDriver(dut, dut.clk, dut.rst, CLK_PERIOD, name="aximl", debug=False)
     await reset_dut(dut)
@@ -96,7 +96,7 @@ async def test_read_control(dut):
         Read from the version register
     """
     dut._log.setLevel(logging.WARNING)
-    dut.test_id <= 2
+    dut.test_id.value =  2
     setup_dut(dut)
     driver = DemoAXIStreamsDriver(dut, dut.clk, dut.rst, CLK_PERIOD, name="aximl", debug=False)
     await reset_dut(dut)
@@ -121,7 +121,7 @@ async def test_axis_write(dut):
         Read from the version register
     """
     dut._log.setLevel(logging.WARNING)
-    dut.test_id <= 3
+    dut.test_id.value =  3
     setup_dut(dut)
     driver = DemoAXIStreamsDriver(dut, dut.clk, dut.rst, CLK_PERIOD, name="aximl", debug=False)
     #await Timer(CLK_PERIOD * 20)
@@ -161,7 +161,7 @@ async def test_axis_write_and_read(dut):
     """
     #dut._log.setLevel(logging.WARNING)
     DATA_COUNT = 16
-    dut.test_id <= 4
+    dut.test_id.value =  4
     setup_dut(dut)
     driver = DemoAXIStreamsDriver(dut, dut.clk, dut.rst, CLK_PERIOD, name="aximl", debug=False)
     axis_source = AXISSource(dut, "axis_in",  dut.axis_clk, dut.axis_rst)
@@ -172,7 +172,7 @@ async def test_axis_write_and_read(dut):
     version = await driver.get_version()
     sdata = [list(range(DATA_COUNT))]
 
-    cocotb.fork(axis_sink.receive())
+    cocotb.start_soon(axis_sink.receive())
     await Timer(AXIS_CLK_PERIOD * CLK_PERIOD * 20)
     await axis_source.send_raw_data(sdata)
     await Timer(AXIS_CLK_PERIOD * CLK_PERIOD * 20)
@@ -200,7 +200,7 @@ async def test_axis_write_and_read_with_source_idle(dut):
     dut._log.setLevel(logging.WARNING)
     #dut._log.setLevel(logging.INFO)
     DATA_COUNT = 16
-    dut.test_id <= 5
+    dut.test_id.value =  5
     setup_dut(dut)
     driver = DemoAXIStreamsDriver(dut, dut.clk, dut.rst, CLK_PERIOD, name="aximl", debug=False)
     axis_source = AXISSource(dut, "axis_in",  dut.axis_clk, dut.axis_rst)
@@ -217,7 +217,7 @@ async def test_axis_write_and_read_with_source_idle(dut):
 
     axis_source.insert_idle_list(idle_list)
 
-    cocotb.fork(axis_sink.receive())
+    cocotb.start_soon(axis_sink.receive())
     await Timer(AXIS_CLK_PERIOD * CLK_PERIOD * 20)
     await axis_source.send_raw_data(sdata)
     await Timer(AXIS_CLK_PERIOD * CLK_PERIOD * 20)
@@ -245,7 +245,7 @@ async def test_axis_write_and_read_with_sink_back_preassure(dut):
     dut._log.setLevel(logging.WARNING)
     #dut._log.setLevel(logging.INFO)
     DATA_COUNT = 16
-    dut.test_id <= 6
+    dut.test_id.value =  6
     setup_dut(dut)
     driver = DemoAXIStreamsDriver(dut, dut.clk, dut.rst, CLK_PERIOD, name="aximl", debug=False)
     axis_source = AXISSource(dut, "axis_in",  dut.axis_clk, dut.axis_rst)
@@ -264,7 +264,7 @@ async def test_axis_write_and_read_with_sink_back_preassure(dut):
     bp_list[2] = 1
     axis_sink.insert_backpreassure_list(bp_list)
 
-    cocotb.fork(axis_sink.receive())
+    cocotb.start_soon(axis_sink.receive())
     await RisingEdge(dut.clk)
     await Timer(AXIS_CLK_PERIOD * CLK_PERIOD * 20)
     await axis_source.send_raw_data(sdata)
@@ -292,7 +292,7 @@ async def test_axis_write_and_read_with_sink_idle_and_back_preassure(dut):
     dut._log.setLevel(logging.WARNING)
     #dut._log.setLevel(logging.INFO)
     DATA_COUNT = 16
-    dut.test_id <= 7
+    dut.test_id.value =  7
     setup_dut(dut)
     driver = DemoAXIStreamsDriver(dut, dut.clk, dut.rst, CLK_PERIOD, name="aximl", debug=False)
     axis_source = AXISSource(dut, "axis_in",  dut.axis_clk, dut.axis_rst)
@@ -319,7 +319,7 @@ async def test_axis_write_and_read_with_sink_idle_and_back_preassure(dut):
     axis_sink.insert_backpreassure_list(bp_list)
     axis_source.insert_idle_list(idle_list)
 
-    cocotb.fork(axis_sink.receive())
+    cocotb.start_soon(axis_sink.receive())
 
     await Timer(AXIS_CLK_PERIOD * CLK_PERIOD * 20)
     await axis_source.send_raw_data(sdata)

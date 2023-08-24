@@ -96,12 +96,12 @@ module axi_master #
     output  reg                   axi_arvalid,
     input                         axi_arready,
 
-    output      [DATA_WIDTH-1:0]  axi_rdata,
+    input       [DATA_WIDTH-1:0]  axi_rdata,
     input       [ID_WIDTH-1: 0]   axi_rid,
-    output                        axi_rlast,
-    output                        axi_rvalid,
+    input                         axi_rlast,
+    input                         axi_rvalid,
     input       [1:0]             axi_rresp,
-    input                         axi_rready
+    output                        axi_rready
 );
 
 //Local Parameters

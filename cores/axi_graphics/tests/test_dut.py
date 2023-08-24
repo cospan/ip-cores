@@ -35,7 +35,7 @@ COLOR_WHITE    = 0xFFFFFF
 CURRENT_FRAME = None
 
 def setup_dut(dut):
-    cocotb.fork(Clock(dut.clk, CLK_PERIOD).start())
+    cocotb.start_soon(Clock(dut.clk, CLK_PERIOD).start())
 
 async def capture_frame(dut, height, width, ref_frame, display = False):
     axis_sink   = AXISSink  (dut, "axis_out", dut.clk, dut.rst)
@@ -55,10 +55,10 @@ async def capture_frame(dut, height, width, ref_frame, display = False):
             assert (ref_frame[y][x] == rdata[y][x])
 
 async def reset_dut(dut):
-    dut.rst <= 1
+    dut.rst.value = 1
     await RisingEdge(dut.clk)
     await Timer(CLK_PERIOD * 10)
-    dut.rst <= 0
+    dut.rst.value = 0
     await Timer(CLK_PERIOD * 10)
 
 @cocotb.test(skip = True)
@@ -77,7 +77,7 @@ async def read_version(dut):
     HEIGHT = 480
     setup_dut(dut)
     driver = AXIGraphicsDriver(dut, dut.clk, dut.rst, CLK_PERIOD, name="aximl", debug=False)
-    dut.test_id <= 0
+    dut.test_id.value = 0
     await reset_dut(dut)
     version = await driver.get_version()
     dut._log.info ("Version: 0x%08X" % version)
@@ -129,11 +129,11 @@ async def test_colorbars(dut):
     driver = AXIGraphicsDriver(dut, dut.clk, dut.rst, CLK_PERIOD, name="aximl", debug=False)
     axis_sink   = AXISSink  (dut, "axis_out", dut.clk, dut.rst)
 
-    dut.test_id <= 1
+    dut.test_id.value = 1
     await reset_dut(dut)
     await axis_sink.reset()
 
-    cocotb.fork(capture_frame(dut, HEIGHT, WIDTH, ref_frame, DEBUG))
+    cocotb.start_soon(capture_frame(dut, HEIGHT, WIDTH, ref_frame, DEBUG))
     await driver.set_width(WIDTH)
     await driver.set_height(HEIGHT)
     await driver.set_mode(5)
@@ -176,11 +176,11 @@ async def draw_square(dut):
                 if DEBUG: print ("NONE ", end='')
         if DEBUG: print ("")
 
-    dut.test_id <= 2
+    dut.test_id.value = 2
     await reset_dut(dut)
     await axis_sink.reset()
 
-    cocotb.fork(capture_frame(dut, HEIGHT, WIDTH, ref_frame, DEBUG))
+    cocotb.start_soon(capture_frame(dut, HEIGHT, WIDTH, ref_frame, DEBUG))
     await driver.set_width(WIDTH)
     await driver.set_height(HEIGHT)
     await driver.set_ref0_xy(refA[0], refA[1])

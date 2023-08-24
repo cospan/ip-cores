@@ -21,8 +21,8 @@ MODULE_PATH = os.path.abspath(MODULE_PATH)
 
 def setup_dut(dut):
     #Fork any simulation specific co-routines
-    #cocotb.fork(my_sim_coroutine(dut))
-    cocotb.fork(Clock(dut.clk, CLK_FREQUENCY).start())
+    #cocotb.start_soon(my_sim_coroutine(dut))
+    cocotb.start_soon(Clock(dut.clk, CLK_FREQUENCY).start())
 
 # A simulation specific co-routine to stimulate the DUT in some way
 #       At the moment do nothing
@@ -33,9 +33,9 @@ async def my_sim_coroutine(dut):
         await Timer(CLK_FREQUENCY * 20)
 
 async def reset_dut(dut):
-    dut.rst <= 1
+    dut.rst.value =  1
     await Timer(CLK_FREQUENCY * 10)
-    dut.rst <= 0
+    dut.rst.value =  0
     await Timer(CLK_FREQUENCY * 10)
 
 @cocotb.test(skip = False)
@@ -53,7 +53,7 @@ async def test_read_version(dut):
         within the version register
     """
     dut._log.setLevel(logging.WARNING)
-    dut.test_id <= 0
+    dut.test_id.value =  0
     setup_dut(dut)
     driver = FPSCounterDriver(dut, dut.clk, dut.rst, CLK_FREQUENCY, name="aximl", debug=False)
     await reset_dut(dut)
@@ -84,7 +84,7 @@ async def test_boilerplate(dut):
         written using the AXI interface
     """
     dut._log.setLevel(logging.WARNING)
-    dut.test_id <= 1
+    dut.test_id.value =  1
     setup_dut(dut)
     driver = FPSCounterDriver(dut, dut.clk, dut.rst, CLK_FREQUENCY, name="aximl", debug=False)
     axis_source = AXISSource(dut, "axis_in", dut.clk, dut.rst)
@@ -140,7 +140,7 @@ async def test_rows_not_equal(dut):
         written using the AXI interface
     """
     dut._log.setLevel(logging.WARNING)
-    dut.test_id <= 2
+    dut.test_id.value =  2
     setup_dut(dut)
     driver = FPSCounterDriver(dut, dut.clk, dut.rst, CLK_FREQUENCY, name="aximl", debug=False)
     axis_source = AXISSource(dut, "axis_in", dut.clk, dut.rst)
@@ -205,7 +205,7 @@ async def test_lines_not_equal(dut):
         written using the AXI interface
     """
     dut._log.setLevel(logging.WARNING)
-    dut.test_id <= 3
+    dut.test_id.value =  3
     setup_dut(dut)
     driver = FPSCounterDriver(dut, dut.clk, dut.rst, CLK_FREQUENCY, name="aximl", debug=False)
     axis_source = AXISSource(dut, "axis_in", dut.clk, dut.rst)

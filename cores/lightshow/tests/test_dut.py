@@ -20,8 +20,8 @@ MODULE_PATH = os.path.abspath(MODULE_PATH)
 
 def setup_dut(dut):
     #Fork any simulation specific co-routines
-    cocotb.fork(Clock(dut.clk, CLK_PERIOD).start())
-    #cocotb.fork(my_sim_coroutine(dut))
+    cocotb.start_soon(Clock(dut.clk, CLK_PERIOD).start())
+    #cocotb.start_soon(my_sim_coroutine(dut))
 
 # A simulation specific co-routine to stimulate the DUT in some way
 #       At the moment do nothing
@@ -32,9 +32,9 @@ async def my_sim_coroutine(dut):
         await Timer(CLK_PERIOD * 20)
 
 async def reset_dut(dut):
-    dut.rst <= 1
+    dut.rst.value =  1
     await Timer(CLK_PERIOD * 2)
-    dut.rst <= 0
+    dut.rst.value =  0
     await Timer(CLK_PERIOD * 2)
 
 @cocotb.test(skip = False)
@@ -48,7 +48,7 @@ async def test_read_version(dut):
     Expected Results:
         Read from the version register
     """
-    dut.test_id <= 0
+    dut.test_id.value =  0
     dut._log.setLevel(logging.WARNING)
     setup_dut(dut)
     driver = LightshowDriver(dut, dut.clk, dut.rst, CLK_PERIOD, name="aximl", debug=False)
@@ -75,7 +75,7 @@ async def test_manual_pwm_color(dut):
     Expected Results:
         Read from the version register
     """
-    dut.test_id <= 1
+    dut.test_id.value =  1
     dut._log.setLevel(logging.WARNING)
     setup_dut(dut)
     driver = LightshowDriver(dut, dut.clk, dut.rst, CLK_PERIOD, name="aximl", debug=False)
@@ -98,7 +98,7 @@ async def test_color_state_no_transition(dut):
     Expected Results:
         Read from the version register
     """
-    dut.test_id <= 2
+    dut.test_id.value =  2
     dut._log.setLevel(logging.WARNING)
     setup_dut(dut)
     driver = LightshowDriver(dut, dut.clk, dut.rst, CLK_PERIOD, name="aximl", debug=False)
@@ -132,7 +132,7 @@ async def test_color_state_with_transition(dut):
     Expected Results:
         Read from the version register
     """
-    dut.test_id <= 3
+    dut.test_id.value =  3
     dut._log.setLevel(logging.WARNING)
     setup_dut(dut)
     driver = LightshowDriver(dut, dut.clk, dut.rst, CLK_PERIOD, name="aximl", debug=False)
