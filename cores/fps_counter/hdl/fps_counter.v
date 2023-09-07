@@ -29,7 +29,7 @@
 
 module fps_counter #(
   parameter ADDR_WIDTH          = 16,
-  parameter CLOCK_FREQUENCY     = 100000000,
+  parameter CLOCK_PERIOD        = 100000000,
   parameter IMG_WIDTH_MAX       = 16,
   parameter IMG_HEIGHT_MAX      = 16,
 
@@ -101,11 +101,12 @@ localparam  REG_MAX_LINES_PER_FRAME =  7 << 2;
 localparam  REG_MAX_PIXELS_PER_ROW  =  8 << 2;
 localparam  REG_INTERMEDIATE_ROWS   =  9 << 2;
 localparam  REG_INTERMEDIATE_HEIGHT = 10 << 2;
+localparam  REG_LINE_WIDTH_COUNT    = 11 << 2;
 
 
 
 
-localparam  REG_VERSION             = 11 << 2;
+localparam  REG_VERSION             = 20 << 2;
 localparam  MAX_ADDR = REG_VERSION;
 
 //registers/wires
@@ -129,7 +130,7 @@ reg   [31: 0]               r_reg_out_data             = 0;
 
 //TEMP DATA, JUST FOR THE DEMO
 wire  [31: 0]               w_version;
-reg   [31: 0]               r_clock_frequency          = 0;
+reg   [31: 0]               r_clock_period             = 0;
 reg   [31: 0]               r_counts_per_second        = 0;
 reg   [31: 0]               r_total_frame_count        = 0;
 reg   [31: 0]               r_frames_per_second        = 0;
@@ -144,6 +145,8 @@ reg   [IMG_HEIGHT_MAX - 1: 0] r_image_height_count_out = 0;
 reg   [IMG_HEIGHT_MAX - 1: 0] r_fps_count              = 0;
 reg   [IMG_HEIGHT_MAX - 1: 0] r_fps_count_out          = 0;
 
+reg   [31:0]                  r_width_length_count     = 0;
+reg   [31:0]                  r_width_length_count_out = 0;
 
 reg   [IMG_WIDTH_MAX - 1: 0]  r_max_image_width_count_out  = 0;
 reg   [IMG_HEIGHT_MAX - 1: 0] r_max_image_height_count_out = 0;
@@ -241,7 +244,7 @@ always @ (posedge i_axi_clk) begin
     r_reg_out_data                        <= 0;
 
     //Reset the temporary Data
-    r_clock_frequency                     <= CLOCK_FREQUENCY;
+    r_clock_period                        <= CLOCK_PERIOD;
     r_counts_per_second                   <= 0;
 
     r_axis_tuser_prev                     <= 0;
@@ -251,6 +254,9 @@ always @ (posedge i_axi_clk) begin
     r_total_frame_count                   <= 0;
     r_fps_count                           <= 0;
     r_fps_count_out                       <= 0;
+
+    r_width_length_count                  <= 0;
+    r_width_length_count_out              <= 0;
 
     r_image_width_count                   <= 0;
     r_image_width_count_out               <= 0;
@@ -292,8 +298,8 @@ always @ (posedge i_axi_clk) begin
         REG_VERSION: begin
           //$display("Incoming data on address: 0x%h: 0x%h", w_reg_address, w_reg_in_data);
         end
-        REG_CLK_FREQUENCY: begin
-          r_clock_frequency               <= w_reg_in_data;
+        REG_CLK_PERIOD: begin
+          r_clock_period                  <= w_reg_in_data;
         end
         REG_TOTAL_FRAMES: begin
         end
@@ -310,6 +316,8 @@ always @ (posedge i_axi_clk) begin
         REG_INTERMEDIATE_ROWS: begin
         end
         REG_INTERMEDIATE_HEIGHT: begin
+        end
+        REG_LINE_WIDTH_COUNT: begin
         end
         default: begin
           $display ("Unknown address: 0x%h", w_reg_address);
@@ -336,8 +344,8 @@ always @ (posedge i_axi_clk) begin
         REG_VERSION: begin
           r_reg_out_data                  <= w_version;
         end
-        REG_CLK_FREQUENCY: begin
-          r_reg_out_data                  <= r_clock_frequency;
+        REG_CLK_PERIOD: begin
+          r_reg_out_data                  <= r_clock_period;
         end
         REG_TOTAL_FRAMES: begin
           r_reg_out_data                  <= r_total_frame_count;
@@ -363,6 +371,9 @@ always @ (posedge i_axi_clk) begin
         REG_INTERMEDIATE_HEIGHT: begin
           r_reg_out_data                  <= r_image_height_count;
         end
+        REG_LINE_WIDTH_COUNT: begin
+          r_reg_out_data                  <= r_width_length_count_out;
+        end
         default: begin
           //Unknown address
           r_reg_out_data                  <= 32'h00;
@@ -374,7 +385,7 @@ always @ (posedge i_axi_clk) begin
     end
 
     //Frequency Counter
-    if (r_counts_per_second < r_clock_frequency)
+    if (r_counts_per_second < r_clock_period)
       r_counts_per_second                 <= r_counts_per_second + 1;
     else begin
       r_counts_per_second                 <= 0;
@@ -385,6 +396,7 @@ always @ (posedge i_axi_clk) begin
 
     //Reset Vertical Lines (new frame)
     if (w_new_frame_stb) begin
+      r_width_length_count                <=  0;
       r_new_frame                         <=  1;
       r_frame_detected                    <=  1;
       if ((r_image_height_count_out != 0) && (r_image_height_count_out != r_image_height_count))
@@ -404,6 +416,8 @@ always @ (posedge i_axi_clk) begin
 
     //End of Line
     if (w_valid_line_stb) begin
+      r_width_length_count_out            <=  r_width_length_count;
+      r_width_length_count                <=  0;
       //Check if the previous line matches with the current line
       if ((r_image_width_count_out != 0) && (r_image_width_count_out != (r_image_width_count + 1)))
         r_rows_not_equal                  <=  1;
@@ -412,6 +426,9 @@ always @ (posedge i_axi_clk) begin
       r_image_width_count_out             <=  r_image_width_count + 1;
       r_image_width_count                 <=  0;
     end
+
+    r_width_length_count                  <=  r_width_length_count + 1;
+
 
   end
 end

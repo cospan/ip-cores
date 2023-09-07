@@ -5,14 +5,22 @@ __author__ = "<your@email.here>"
 from axi_driver import Driver
 
 
-REG_CONTROL             = 0 << 2;
-REG_STATUS              = 1 << 2;
-REG_CLK_FREQUENCY          = 2 << 2;
-REG_TOTAL_FRAMES        = 3 << 2;
-REG_FRAMES_PER_SECOND   = 4 << 2;
-REG_LINES_PER_FRAME     = 5 << 2;
-REG_PIXELS_PER_ROW      = 6 << 2;
-REG_VERSION             = 7 << 2;
+REG_CONTROL             = 0  << 2;
+REG_STATUS              = 1  << 2;
+REG_CLK_PERIOD          = 2  << 2;
+REG_TOTAL_FRAMES        = 3  << 2;
+REG_FRAMES_PER_SECOND   = 4  << 2;
+REG_LINES_PER_FRAME     = 5  << 2;
+REG_PIXELS_PER_ROW      = 6  << 2;
+REG_MAX_LINES_PER_FRAME = 7  << 2;
+REG_MAX_PIXELS_PER_ROW  = 8  << 2;
+REG_INTERMEDIATE_ROWS   = 9  << 2;
+REG_INTERMEDIATE_HEIGHT = 10 << 2;
+REG_LINE_WIDTH_COUNT    = 11 << 2;
+
+
+
+REG_VERSION             = 20 << 2;
 
 #Set/Clear a bit
 BIT_CTRL_RESET_FRAME_COUNTS     = 0
@@ -22,8 +30,8 @@ BIT_STS_ROWS_NOT_EQUAL          = 1
 BIT_STS_LINES_NOT_EQUAL         = 2
 
 class FPSCounterDriver (Driver):
-    def __init__(self, dut, clock, reset, clk_frequency, name="aximl", debug = False):
-        super(FPSCounterDriver, self).__init__(dut, clock, reset, clk_frequency, name, debug=debug)
+    def __init__(self, dut, clock, reset, clk_period, name="aximl", debug = False):
+        super(FPSCounterDriver, self).__init__(dut, clock, reset, clk_period, name, debug=debug)
 
     def __del__(self):
         pass
@@ -47,8 +55,8 @@ class FPSCounterDriver (Driver):
         await self.set_register_bit(REG_STATUS, BIT_STS_FRAME_DETECTED)
         return data
 
-    async def set_clock_frequency(self, frequency):
-        await self.write_register(REG_CLK_FREQUENCY, frequency)
+    async def set_clock_period(self, period):
+        await self.write_register(REG_CLK_PERIOD, period)
 
     async def reset_frame_counts(self, enable):
         await self.enable_register_bit(REG_CONTROL, BIT_CTRL_RESET_FRAME_COUNTS, enable)
@@ -68,4 +76,9 @@ class FPSCounterDriver (Driver):
     async def get_pixels_per_row(self):
         data = await self.read_register(REG_PIXELS_PER_ROW)
         return data
+
+    async def get_line_width_count(self):
+        data = await self.read_register(REG_LINE_WIDTH_COUNT)
+        return data
+
 
